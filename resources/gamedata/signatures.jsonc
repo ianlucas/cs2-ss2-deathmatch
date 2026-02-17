@@ -1,0 +1,7 @@
+{
+  "CCSPlayerController::HintMessage": {
+    "lib": "server",
+    "linux": "44 8B 87 ? ? ? ? 49 89 F1",
+    "windows": ""
+  }
+}
