@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-using SwiftlyS2.Shared.Misc;
 using SwiftlyS2.Shared.Players;
 using SwiftlyS2.Shared.ProtobufDefinitions;
 using SwiftlyS2.Shared.SchemaDefinitions;
@@ -33,39 +32,23 @@ public partial class Deathmatch
         }
     }
 
-    public void HandlePlayerGunRequest(IPlayer player, Gun gun)
+    public static void HandlePlayerGunRequest(IPlayer player, Gun gun)
     {
-        if (!player.IsAlive)
+        if (
+            !player.IsAlive
+            || Game.CurrentMode == null
+            || !Game.CurrentGuns.ContainsKey(gun.ItemDef)
+        )
             return;
-        var mode = Game.CurrentMode;
-        if (mode == null)
-            return;
-        if (!Game.CurrentGuns.ContainsKey(gun.ItemDef))
-            return;
-        var isSecondary = gun.Type == "Pistol";
-        player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(
-            isSecondary ? gear_slot_t.GEAR_SLOT_PISTOL : gear_slot_t.GEAR_SLOT_RIFLE
-        );
-        player.PlayerPawn?.ItemServices?.GiveItem(gun.DesignerName);
-        var playerState = player.GetState();
-        var loadout = playerState.GetLoadout(mode.Value.Name);
-        if (isSecondary)
-            loadout?.Secondary = gun;
-        else
-            loadout?.Primary = gun;
+        player.SwitchGun(gun);
     }
 
-    public void HandlePlayerSpawnGuns(IPlayer player)
+    public static void HandlePlayerSpawn(IPlayer player)
     {
         player.GiveLoadout();
     }
 
-    public bool HandlePlayerGunAcquire(
-        IPlayer player,
-        AcquireMethod method,
-        Gun gun,
-        CCSWeaponBaseVData vData
-    )
+    public static bool HandlePlayerGunAcquire(IPlayer player, Gun gun, CCSWeaponBaseVData vData)
     {
         if (
             vData.GearSlot != gear_slot_t.GEAR_SLOT_RIFLE
@@ -74,18 +57,7 @@ public partial class Deathmatch
             return true;
         if (Game.CurrentMode == null || !Game.CurrentGuns.ContainsKey(gun.ItemDef))
             return false;
-        var playerState = player.GetState();
-        var loadout = playerState.GetLoadout(Game.CurrentMode.Value.Name);
-        if (vData.GearSlot == gear_slot_t.GEAR_SLOT_RIFLE)
-        {
-            if (loadout.Primary != null && loadout.Primary != gun)
-                loadout.Primary = gun;
-        }
-        else if (vData.GearSlot == gear_slot_t.GEAR_SLOT_PISTOL)
-        {
-            if (loadout.Secondary != null && loadout.Secondary != gun)
-                loadout.Secondary = gun;
-        }
+        player.GetState().GetLoadout(Game.CurrentMode.Value.Name).UpdateSlot(gun.GearSlot, gun);
         return true;
     }
 }

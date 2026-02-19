@@ -16,7 +16,7 @@ public partial class Deathmatch
     {
         var player = @event.UserIdPlayer;
         if (player != null)
-            HandlePlayerSpawnGuns(player);
+            HandlePlayerSpawn(player);
         return HookResult.Continue;
     }
 

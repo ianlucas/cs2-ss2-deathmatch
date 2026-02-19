@@ -55,7 +55,7 @@ public partial class Deathmatch
         var gun = Game.Guns.FirstOrDefault(g =>
             g.ItemDef == @event.EconItemView.ItemDefinitionIndex
         );
-        if (gun == null || !HandlePlayerGunAcquire(player, @event.AcquireMethod, gun, vData))
+        if (gun == null || !HandlePlayerGunAcquire(player, gun, vData))
             @event.SetAcquireResult(AcquireResult.NotAllowedByMode);
         else
             @event.SetAcquireResult(AcquireResult.Allowed);

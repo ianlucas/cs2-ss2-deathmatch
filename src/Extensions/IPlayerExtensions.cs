@@ -46,6 +46,15 @@ public static class IPlayerExtensions
             }
         }
 
+        public void SwitchGun(Gun gun)
+        {
+            if (Game.CurrentMode == null)
+                return;
+            self.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gun.GearSlot);
+            self.PlayerPawn?.ItemServices?.GiveItem(gun.DesignerName);
+            self.GetState().GetLoadout(Game.CurrentMode.Value.Name).Set(gun);
+        }
+
         public void GiveLoadout()
         {
             if (Game.CurrentMode == null)

@@ -152,44 +152,59 @@ public static class Game
     public static void TryStartNextMode()
     {
         var tick = Swiftly.Core.Engine.GlobalVars.TickCount;
-        if (CurrentMode == null || ((tick - ModeStartedAt) / 64) > CurrentMode.Value.Duration)
+        if (CurrentMode != null && ((tick - ModeStartedAt) / 64) <= CurrentMode.Value.Duration)
+            return;
+        CurrentMode = CurrentMode?.Next ?? Modes.First;
+        ModeStartedAt = tick;
+        if (CurrentMode == null)
+            return;
+        RebuildCurrentGuns(CurrentMode.Value);
+        var (secondary, primary) = ComputeDefaultGuns(CurrentMode.Value);
+        if (secondary != null)
+            DefaultGuns = (secondary, primary);
+        ResetAllPlayers();
+    }
+
+    private static void RebuildCurrentGuns(Mode mode)
+    {
+        CurrentGuns.Clear();
+        foreach (var gun in Guns)
+            if (mode.Guns.Contains(gun.DesignerName.Replace("weapon_", "")))
+                CurrentGuns.Add(gun.ItemDef, gun);
+    }
+
+    private static (Gun? Secondary, Gun? Primary) ComputeDefaultGuns(Mode mode)
+    {
+        Gun? secondary = null;
+        Gun? primary = null;
+        foreach (
+            var gun in mode.Guns.Select(name =>
+                Guns.FirstOrDefault(g => g.DesignerName == $"weapon_{name}")
+            )
+        )
         {
-            CurrentMode = CurrentMode?.Next ?? Modes.First;
-            ModeStartedAt = tick;
-            if (CurrentMode == null)
-                return;
-            CurrentGuns.Clear();
-            foreach (var gun in Guns)
-                if (CurrentMode.Value.Guns.Contains(gun.DesignerName.Replace("weapon_", "")))
-                    CurrentGuns.Add(gun.ItemDef, gun);
-            Gun? secondary = null;
-            Gun? primary = null;
-            foreach (
-                var gun in CurrentMode.Value.Guns.Select(designerName =>
-                    Guns.FirstOrDefault(g => g.DesignerName == $"weapon_{designerName}")
-                )
-            )
-            {
-                if (gun == null)
-                    continue;
-                if (gun.Type == "Pistol")
-                    secondary ??= gun;
-                else
-                    primary ??= gun;
-                if (secondary != null && primary != null)
-                    break;
-            }
-            if (secondary != null)
-                DefaultGuns = (secondary, primary);
-            foreach (
-                var player in Swiftly.Core.PlayerManager.GetAllValidPlayers().Where(p => p.IsAlive)
-            )
-            {
-                player.SetHealth(100);
-                player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_PISTOL);
-                player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_RIFLE);
-                player.GiveLoadout();
-            }
+            if (gun == null)
+                continue;
+            if (gun.IsSecondary)
+                secondary ??= gun;
+            else
+                primary ??= gun;
+            if (secondary != null && primary != null)
+                break;
+        }
+        return (secondary, primary);
+    }
+
+    private static void ResetAllPlayers()
+    {
+        foreach (
+            var player in Swiftly.Core.PlayerManager.GetAllValidPlayers().Where(p => p.IsAlive)
+        )
+        {
+            player.SetHealth(100);
+            player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_PISTOL);
+            player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_RIFLE);
+            player.GiveLoadout();
         }
     }
 }
