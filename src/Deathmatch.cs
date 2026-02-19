@@ -24,10 +24,13 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
     {
         Swiftly.Initialize();
         ConVars.Initialize();
+        Core.GameData.ApplyPatch("RandomSpawnPatch");
         Core.Event.OnMapLoad += OnMapLoad;
         Core.Event.OnTick += OnTick;
+        Core.Event.OnCommandExecuteHook += OnCommandExecute;
         Core.Event.OnItemServicesCanAcquireHook += OnCanAcquire;
         Core.GameEvent.HookPost<EventPlayerSpawn>(OnPlayerSpawn);
+        Core.GameEvent.HookPost<EventPlayerDeath>(OnPlayerDeath);
         foreach (var gun in Game.Guns)
         foreach (var name in gun.Aliases)
             Core.Command.RegisterCommand(

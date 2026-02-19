@@ -9,7 +9,7 @@ public class Mode(
     string name,
     List<string> guns,
     int duration,
-    int freeArmor = 2,
+    bool helmet = true,
     BotLoadout? botLoadout = null
 )
 {
@@ -19,7 +19,7 @@ public class Mode(
 
     public int Duration { get; set; } = duration;
 
-    public int FreeArmor { get; set; } = freeArmor;
+    public bool Helmet { get; set; } = helmet;
 
     public BotLoadout? BotLoadout { get; set; } = botLoadout;
 }

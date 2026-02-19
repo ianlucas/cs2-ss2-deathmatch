@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-using System.Collections.Concurrent;
+using SwiftlyS2.Shared.SchemaDefinitions;
 
 namespace Deathmatch;
 
@@ -11,7 +11,9 @@ public static class Game
 {
     public static int ModeStartedAt { get; set; } = 0;
     public static LinkedListNode<Mode>? CurrentMode { get; set; }
-    public static ConcurrentDictionary<ushort, Gun> CurrentGuns { get; set; } = [];
+    public static Dictionary<ushort, Gun> CurrentGuns { get; set; } = [];
+    public static (Gun Secondary, Gun? Primary)? DefaultGuns { get; set; }
+    public static readonly int SpawnDelay = 32;
     public static readonly List<Gun> Guns =
     [
         // Pistols
@@ -71,8 +73,8 @@ public static class Game
                 "cz75a",
                 "revolver",
             ],
-            freeArmor: 1,
-            duration: 300,
+            helmet: false,
+            duration: 100,
             botLoadout: new([new("usp_silencer", 0.8f), new("glock", 0.1f), new("deagle", 0.1f)])
         ),
         new(
@@ -95,7 +97,7 @@ public static class Game
                 "mp7",
                 "ump45",
             ],
-            duration: 300,
+            duration: 100,
             botLoadout: new([new("deagle", 1)], [new("mp9", 0.1f)])
         ),
         new(
@@ -122,7 +124,7 @@ public static class Game
                 "awp",
                 "ssg08",
             ],
-            duration: 300,
+            duration: 100,
             botLoadout: new(
                 [new("deagle", 1)],
                 [new("ak47", 0.7f), new("m4a1", 0.1f), new("m4a1_silencer", 0.1f), new("awp", 0.1f)]
@@ -153,13 +155,41 @@ public static class Game
         if (CurrentMode == null || ((tick - ModeStartedAt) / 64) > CurrentMode.Value.Duration)
         {
             CurrentMode = CurrentMode?.Next ?? Modes.First;
+            ModeStartedAt = tick;
             if (CurrentMode == null)
                 return;
             CurrentGuns.Clear();
             foreach (var gun in Guns)
                 if (CurrentMode.Value.Guns.Contains(gun.DesignerName.Replace("weapon_", "")))
-                    CurrentGuns.TryAdd(gun.ItemDef, gun);
-            // Time to change!
+                    CurrentGuns.Add(gun.ItemDef, gun);
+            Gun? secondary = null;
+            Gun? primary = null;
+            foreach (
+                var gun in CurrentMode.Value.Guns.Select(designerName =>
+                    Guns.FirstOrDefault(g => g.DesignerName == $"weapon_{designerName}")
+                )
+            )
+            {
+                if (gun == null)
+                    continue;
+                if (gun.Type == "Pistol")
+                    secondary ??= gun;
+                else
+                    primary ??= gun;
+                if (secondary != null && primary != null)
+                    break;
+            }
+            if (secondary != null)
+                DefaultGuns = (secondary, primary);
+            foreach (
+                var player in Swiftly.Core.PlayerManager.GetAllValidPlayers().Where(p => p.IsAlive)
+            )
+            {
+                player.SetHealth(100);
+                player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_PISTOL);
+                player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_RIFLE);
+                player.GiveLoadout();
+            }
         }
     }
 }

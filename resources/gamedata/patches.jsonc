@@ -1,0 +1,7 @@
+{
+  "RandomSpawnPatch": {
+    "signature": "RandomSpawnPatch",
+    "linux": "90 E9",
+    "windows": ""
+  }
+}

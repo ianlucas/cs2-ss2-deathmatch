@@ -14,7 +14,14 @@ public partial class Deathmatch
 {
     public HookResult OnPlayerSpawn(EventPlayerSpawn @event)
     {
-        @event.UserIdPlayer?.PlayerPawn?.ItemServices?.GiveItem("weapon_deagle");
+        var player = @event.UserIdPlayer;
+        if (player != null)
+            HandlePlayerSpawnGuns(player);
+        return HookResult.Continue;
+    }
+
+    public HookResult OnPlayerDeath(EventPlayerDeath @event)
+    {
         return HookResult.Continue;
     }
 }
