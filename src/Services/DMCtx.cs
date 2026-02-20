@@ -9,9 +9,9 @@ namespace Deathmatch;
 
 public static class DMCtx
 {
-    public static int ModeStartedAt { get; set; } = 0;
-    public static LinkedListNode<Mode>? CurrentMode { get; set; }
-    public static Dictionary<ushort, Gun> CurrentGuns { get; set; } = [];
+    private static int _modeStartedAt = 0;
+    private static LinkedListNode<Mode>? _currentMode;
+    private static readonly Dictionary<ushort, Gun> _currentGuns = [];
     public static (Gun Secondary, Gun? Primary)? DefaultGuns { get; set; }
     public static readonly int SpawnDelay = 32;
     public static readonly List<Gun> Guns =
@@ -141,25 +141,35 @@ public static class DMCtx
 
     public static string GetRemainingTime()
     {
-        if (CurrentMode == null)
+        if (_currentMode == null)
             return "00:00";
         var tick = Swiftly.Core.Engine.GlobalVars.TickCount;
         return TimeHelper.FormatMmSs(
-            Math.Max(CurrentMode.Value.Duration - ((tick - ModeStartedAt) / 64), 0)
+            Math.Max(_currentMode.Value.Duration - ((tick - _modeStartedAt) / 64), 0)
         );
+    }
+
+    public static Mode? GetCurrentMode()
+    {
+        return _currentMode?.Value;
+    }
+
+    public static Mode? GetNextMode()
+    {
+        return _currentMode?.Next?.Value ?? Modes.First?.Value;
     }
 
     public static void Think()
     {
         var tick = Swiftly.Core.Engine.GlobalVars.TickCount;
-        if (CurrentMode != null && ((tick - ModeStartedAt) / 64) <= CurrentMode.Value.Duration)
+        if (_currentMode != null && ((tick - _modeStartedAt) / 64) <= _currentMode.Value.Duration)
             return;
-        CurrentMode = CurrentMode?.Next ?? Modes.First;
-        ModeStartedAt = tick;
-        if (CurrentMode == null)
+        _currentMode = _currentMode?.Next ?? Modes.First;
+        _modeStartedAt = tick;
+        if (_currentMode == null)
             return;
-        RebuildCurrentGuns(CurrentMode.Value);
-        var (secondary, primary) = ComputeDefaultGuns(CurrentMode.Value);
+        RebuildCurrentGuns(_currentMode.Value);
+        var (secondary, primary) = ComputeDefaultGuns(_currentMode.Value);
         if (secondary != null)
             DefaultGuns = (secondary, primary);
         ResetAllPlayers();
@@ -167,10 +177,20 @@ public static class DMCtx
 
     private static void RebuildCurrentGuns(Mode mode)
     {
-        CurrentGuns.Clear();
+        _currentGuns.Clear();
         foreach (var gun in Guns)
             if (mode.Guns.Contains(gun.DesignerName.Replace("weapon_", "")))
-                CurrentGuns.Add(gun.ItemDef, gun);
+                _currentGuns.Add(gun.ItemDef, gun);
+    }
+
+    public static bool AllowsGun(Gun gun)
+    {
+        return _currentGuns.ContainsKey(gun.ItemDef);
+    }
+
+    public static IEnumerable<Gun> GetCurrentGuns()
+    {
+        return _currentGuns.Values;
     }
 
     private static (Gun? Secondary, Gun? Primary) ComputeDefaultGuns(Mode mode)

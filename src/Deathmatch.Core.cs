@@ -14,9 +14,9 @@ public partial class Deathmatch
     public void HandleOnTick()
     {
         DMCtx.Think();
-        var current = DMCtx.CurrentMode?.Value.Name ?? "N/A";
+        var current = DMCtx.GetCurrentMode()?.Name ?? "N/A";
         var remaining = DMCtx.GetRemainingTime();
-        var next = (DMCtx.CurrentMode?.Next ?? DMCtx.Modes.First)?.Value.Name ?? "N/A";
+        var next = DMCtx.GetNextMode()?.Name ?? "N/A";
         foreach (var player in Core.PlayerManager.GetAllValidPlayers())
         {
             if (!player.IsFakeClient && player.IsAlive)
@@ -34,11 +34,7 @@ public partial class Deathmatch
 
     public static void HandlePlayerGunRequest(IPlayer player, Gun gun)
     {
-        if (
-            !player.IsAlive
-            || DMCtx.CurrentMode == null
-            || !DMCtx.CurrentGuns.ContainsKey(gun.ItemDef)
-        )
+        if (!player.IsAlive || !DMCtx.AllowsGun(gun))
             return;
         player.SwitchGun(gun);
     }
@@ -55,9 +51,10 @@ public partial class Deathmatch
             && vData.GearSlot != gear_slot_t.GEAR_SLOT_PISTOL
         )
             return true;
-        if (DMCtx.CurrentMode == null || !DMCtx.CurrentGuns.ContainsKey(gun.ItemDef))
+        var mode = DMCtx.GetCurrentMode();
+        if (mode == null || !DMCtx.AllowsGun(gun))
             return false;
-        player.GetState().GetLoadout(DMCtx.CurrentMode.Value.Name).UpdateSlot(gun.GearSlot, gun);
+        player.GetState().GetLoadout(mode.Name).UpdateSlot(gun.GearSlot, gun);
         return true;
     }
 }

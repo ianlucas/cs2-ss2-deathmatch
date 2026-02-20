@@ -13,7 +13,7 @@ public partial class Deathmatch
     public void OnGunsCommand(ICommandContext context)
     {
         context.Sender?.SendChat(
-            $"Weapons: {string.Join("[white], ", DMCtx.CurrentGuns.Values.Select(g => $"[lime]!{g.Aliases[0]}"))}"
+            $"Weapons: {string.Join("[white], ", DMCtx.GetCurrentGuns().Select(g => $"[lime]!{g.Aliases[0]}"))}"
         );
     }
 }
