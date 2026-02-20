@@ -87,6 +87,7 @@ public static class IPlayerExtensions
             self.SetArmor(100);
             if (self.PlayerPawn?.ItemServices?.HasHelmet != mode.Helmet)
             {
+                self.SendChat($"helmet={mode.Helmet}");
                 self.PlayerPawn?.ItemServices?.HasHelmet = mode.Helmet;
                 self.PlayerPawn?.ItemServices?.HasHelmetUpdated();
             }

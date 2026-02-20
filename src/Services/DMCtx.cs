@@ -98,7 +98,7 @@ public static class DMCtx
                 "ump45",
             ],
             duration: 100,
-            botLoadout: new([new("deagle", 1)], [new("mp9", 0.1f)])
+            botLoadout: new([new("deagle", 1)], [new("mp9", 0.3f), new("mac10", 0.1f)])
         ),
         new(
             name: "Rifles",

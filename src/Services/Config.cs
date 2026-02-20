@@ -23,7 +23,6 @@ public static class Config
             "mp_buy_during_immunity 0",
             "bot_difficulty 4",
             "mp_bot_ai_bt \"addons/swiftlys2/plugins/Deathmatch/resources/ai/bt_default.kv3\"",
-            // HERE
             "bot_autodifficulty_threshold_high 0.0",
             "bot_autodifficulty_threshold_low -2.0",
             "bot_chatter off",
