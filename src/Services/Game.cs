@@ -7,7 +7,7 @@ using SwiftlyS2.Shared.SchemaDefinitions;
 
 namespace Deathmatch;
 
-public static class Game
+public static class DMCtx
 {
     public static int ModeStartedAt { get; set; } = 0;
     public static LinkedListNode<Mode>? CurrentMode { get; set; }
@@ -149,7 +149,7 @@ public static class Game
         );
     }
 
-    public static void TryStartNextMode()
+    public static void Think()
     {
         var tick = Swiftly.Core.Engine.GlobalVars.TickCount;
         if (CurrentMode != null && ((tick - ModeStartedAt) / 64) <= CurrentMode.Value.Duration)

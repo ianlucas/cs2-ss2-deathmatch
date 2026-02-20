@@ -13,10 +13,10 @@ public partial class Deathmatch
 {
     public void HandleOnTick()
     {
-        Game.TryStartNextMode();
-        var current = Game.CurrentMode?.Value.Name ?? "N/A";
-        var remaining = Game.GetRemainingTime();
-        var next = (Game.CurrentMode?.Next ?? Game.Modes.First)?.Value.Name ?? "N/A";
+        DMCtx.Think();
+        var current = DMCtx.CurrentMode?.Value.Name ?? "N/A";
+        var remaining = DMCtx.GetRemainingTime();
+        var next = (DMCtx.CurrentMode?.Next ?? DMCtx.Modes.First)?.Value.Name ?? "N/A";
         foreach (var player in Core.PlayerManager.GetAllValidPlayers())
         {
             if (!player.IsFakeClient && player.IsAlive)
@@ -36,8 +36,8 @@ public partial class Deathmatch
     {
         if (
             !player.IsAlive
-            || Game.CurrentMode == null
-            || !Game.CurrentGuns.ContainsKey(gun.ItemDef)
+            || DMCtx.CurrentMode == null
+            || !DMCtx.CurrentGuns.ContainsKey(gun.ItemDef)
         )
             return;
         player.SwitchGun(gun);
@@ -55,9 +55,9 @@ public partial class Deathmatch
             && vData.GearSlot != gear_slot_t.GEAR_SLOT_PISTOL
         )
             return true;
-        if (Game.CurrentMode == null || !Game.CurrentGuns.ContainsKey(gun.ItemDef))
+        if (DMCtx.CurrentMode == null || !DMCtx.CurrentGuns.ContainsKey(gun.ItemDef))
             return false;
-        player.GetState().GetLoadout(Game.CurrentMode.Value.Name).UpdateSlot(gun.GearSlot, gun);
+        player.GetState().GetLoadout(DMCtx.CurrentMode.Value.Name).UpdateSlot(gun.GearSlot, gun);
         return true;
     }
 }

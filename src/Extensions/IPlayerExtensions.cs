@@ -6,7 +6,6 @@
 using System.Collections.Concurrent;
 using SwiftlyS2.Shared.Players;
 using SwiftlyS2.Shared.SchemaDefinitions;
-using SwiftlyS2.Shared.Services;
 
 namespace Deathmatch;
 
@@ -28,48 +27,48 @@ public static class IPlayerExtensions
 
         public void SetHealth(int value)
         {
-            var pawn = self.SteamID == 0 ? self.Pawn : self.PlayerPawn;
-            if (pawn?.Health != value)
+            var pawn = self.IsFakeClient ? self.Pawn : self.PlayerPawn;
+            if (pawn != null && pawn.Health != value)
             {
-                pawn?.Health = value;
-                pawn?.HealthUpdated();
+                pawn.Health = value;
+                pawn.HealthUpdated();
             }
         }
 
         public void SetArmor(int value)
         {
-            var pawn = (self.SteamID == 0 ? self.Pawn : self.PlayerPawn)?.As<CCSPlayerPawn>();
-            if (pawn?.ArmorValue != value)
+            var pawn = (self.IsFakeClient ? self.Pawn : self.PlayerPawn)?.As<CCSPlayerPawn>();
+            if (pawn != null && pawn.ArmorValue != value)
             {
-                pawn?.ArmorValue = value;
-                pawn?.ArmorValueUpdated();
+                pawn.ArmorValue = value;
+                pawn.ArmorValueUpdated();
             }
         }
 
         public void SwitchGun(Gun gun)
         {
-            if (Game.CurrentMode == null)
+            if (DMCtx.CurrentMode == null)
                 return;
             self.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gun.GearSlot);
             self.PlayerPawn?.ItemServices?.GiveItem(gun.DesignerName);
-            self.GetState().GetLoadout(Game.CurrentMode.Value.Name).Set(gun);
+            self.GetState().GetLoadout(DMCtx.CurrentMode.Value.Name).Set(gun);
         }
 
         public void GiveLoadout()
         {
-            if (Game.CurrentMode == null)
+            if (DMCtx.CurrentMode == null)
                 return;
-            var loadout = self.GetState().GetLoadout(Game.CurrentMode.Value.Name);
-            var primary = loadout.Primary ?? Game.DefaultGuns?.Primary;
-            var secondary = loadout.Secondary ?? Game.DefaultGuns?.Secondary;
+            var loadout = self.GetState().GetLoadout(DMCtx.CurrentMode.Value.Name);
+            var primary = loadout.Primary ?? DMCtx.DefaultGuns?.Primary;
+            var secondary = loadout.Secondary ?? DMCtx.DefaultGuns?.Secondary;
             if (secondary != null)
                 self.PlayerPawn?.ItemServices?.GiveItem(secondary.DesignerName);
             if (primary != null)
                 self.PlayerPawn?.ItemServices?.GiveItem(primary.DesignerName);
             self.SetArmor(100);
-            if (self.PlayerPawn?.ItemServices?.HasHelmet != Game.CurrentMode.Value.Helmet)
+            if (self.PlayerPawn?.ItemServices?.HasHelmet != DMCtx.CurrentMode.Value.Helmet)
             {
-                self.PlayerPawn?.ItemServices?.HasHelmet = Game.CurrentMode.Value.Helmet;
+                self.PlayerPawn?.ItemServices?.HasHelmet = DMCtx.CurrentMode.Value.Helmet;
                 self.PlayerPawn?.ItemServices?.HasHelmetUpdated();
             }
         }
