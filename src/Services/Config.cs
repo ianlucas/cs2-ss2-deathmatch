@@ -13,6 +13,7 @@ public static class Config
             "bot_join_after_player 0",
             "mp_warmuptime 0",
             "mp_warmup_online_enabled 0",
+            "mp_roundtime 60",
             "mp_roundtime_defuse 60",
             "mp_respawn_immunitytime -1",
             "mp_dm_healthshot_killcount 0",
@@ -115,5 +116,7 @@ public static class Config
             "mp_ct_default_secondary \"\"",
             "mp_give_player_c4 0",
             "sv_warmup_to_freezetime_delay 0",
+            "sv_disable_radar 1",
+            "sv_minimum_desired_chicken_count 0",
         ]);
 }

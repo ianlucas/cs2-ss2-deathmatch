@@ -3,8 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+using Microsoft.Extensions.Logging;
+using SwiftlyS2.Shared.Commands;
 using SwiftlyS2.Shared.Events;
 using SwiftlyS2.Shared.Misc;
+using SwiftlyS2.Shared.Players;
 using SwiftlyS2.Shared.SchemaDefinitions;
 
 namespace Deathmatch;
@@ -33,16 +36,12 @@ public partial class Deathmatch
         Core.ConVar.Find<int>("sv_infinite_ammo")?.Value = 2;
     }
 
-    public static void OnCommandExecute(IOnCommandExecuteHookEvent @event)
+    public HookResult OnClientCommand(int playerid, string commandLine)
     {
-        var commandName = @event.Command.Arg(0);
-        if (@event.HookMode == HookMode.Pre)
-            switch (commandName)
-            {
-                case "autobuy":
-                    @event.Result = HookResult.Stop;
-                    break;
-            }
+        var player = Core.PlayerManager.GetPlayer(playerid);
+        if (player != null && commandLine.StartsWith("buyrandom"))
+            return HookResult.Stop;
+        return HookResult.Continue;
     }
 
     public void OnCanAcquire(IOnItemServicesCanAcquireHookEvent @event)

@@ -5,6 +5,7 @@
 
 using SwiftlyS2.Shared;
 using SwiftlyS2.Shared.GameEventDefinitions;
+using SwiftlyS2.Shared.Misc;
 using SwiftlyS2.Shared.Plugins;
 using SwiftlyS2.Shared.ProtobufDefinitions;
 
@@ -26,13 +27,15 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
         Swiftly.Initialize();
         ConVars.Initialize();
         Core.GameData.ApplyPatch("RandomSpawnPatch");
+        Core.GameData.ApplyPatch("DeathmatchScorePatch");
+        Core.GameData.ApplyPatch("RespawnSoundPatch");
         Core.Event.OnMapLoad += OnMapLoad;
         Core.Event.OnTick += OnTick;
-        Core.Event.OnCommandExecuteHook += OnCommandExecute;
         Core.Event.OnItemServicesCanAcquireHook += OnCanAcquire;
         Core.GameEvent.HookPost<EventPlayerSpawn>(OnPlayerSpawn);
         Core.GameEvent.HookPost<EventItemPickup>(OnItemPickup);
         Core.GameEvent.HookPost<EventPlayerDeath>(OnPlayerDeath);
+        Core.Command.HookClientCommand(OnClientCommand);
         Core.NetMessage.HookServerMessage<CMsgTEWorldDecal>(OnMsgTEWorldDecal);
         foreach (var gun in Guns.All)
         foreach (var name in gun.Aliases)

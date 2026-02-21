@@ -123,8 +123,8 @@ public static class DMCtx
         _modeStartedAt = tick;
         if (_currentMode == null)
             return;
-        ResetAllPlayers();
         Swiftly.Core.ConVar.Find<int>("mp_free_armor")?.Value = _currentMode.Value.Helmet ? 2 : 1;
+        ResetAllPlayers();
     }
 
     private static void ResetAllPlayers()
