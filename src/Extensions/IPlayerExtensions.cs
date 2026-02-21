@@ -96,6 +96,16 @@ public static class IPlayerExtensions
                     self.GiveGun(primary);
             }
         }
+
+        public string GetKDR()
+        {
+            var matchStats = self.Controller.ActionTrackingServices?.MatchStats;
+            if (matchStats == null)
+                return "0.00";
+            var kills = Math.Max(0, matchStats.Kills);
+            var deaths = Math.Max(1, matchStats.Deaths);
+            return (kills / (float)deaths).ToString("0.00");
+        }
     }
 
     private static Gun? PickBotGun(List<BotGun> botGuns)

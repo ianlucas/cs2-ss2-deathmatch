@@ -21,7 +21,7 @@ public partial class Deathmatch
         {
             if (!player.IsFakeClient && player.IsAlive)
             {
-                player.SendAlert($"Session - 2.00 K/D\nPRO - 2.50 K/D");
+                player.SendAlert($"Session - {player.GetKDR()} K/D\nPRO - 2.50 K/D");
                 if (Core.Engine.GlobalVars.TickCount % 64 == 0)
                     Core.NetMessage.Send<CCSUsrMsg_HintText>(msg =>
                     {
