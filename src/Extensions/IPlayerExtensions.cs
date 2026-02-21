@@ -50,9 +50,14 @@ public static class IPlayerExtensions
             var mode = DMCtx.GetCurrentMode();
             if (mode == null)
                 return;
+            var originalTeam = self.Controller.Team;
             self.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gun.GearSlot);
+            if (gun.Team != Team.None && gun.Team != originalTeam)
+                self.Controller.Team = gun.Team;
             self.PlayerPawn?.ItemServices?.GiveItem(gun.DesignerName);
+            self.Controller.Team = originalTeam;
             self.GetState().GetLoadout(mode.Name).Set(gun);
+            self.PlayerPawn?.WeaponServices?.SelectWeaponBySlot(gun.GearSlot);
         }
 
         public void GiveLoadout()
@@ -78,10 +83,21 @@ public static class IPlayerExtensions
                 var loadout = self.GetState().GetLoadout(mode.Name);
                 var primary = loadout.Primary ?? mode.GetDefaultPrimary();
                 var secondary = loadout.Secondary ?? mode.GetDefaultSecondary();
+                var originalTeam = self.Controller.Team;
                 if (secondary != null)
+                {
+                    if (secondary.Team != Team.None && secondary.Team != originalTeam)
+                        self.Controller.Team = secondary.Team;
                     pawn?.ItemServices?.GiveItem(secondary.DesignerName);
+                    self.Controller.Team = originalTeam;
+                }
                 if (primary != null)
+                {
+                    if (primary.Team != Team.None && primary.Team != originalTeam)
+                        self.Controller.Team = primary.Team;
                     pawn?.ItemServices?.GiveItem(primary.DesignerName);
+                    self.Controller.Team = originalTeam;
+                }
             }
         }
     }
