@@ -25,14 +25,6 @@ public class PlayerLoadout
         }
     }
 
-    public void UpdateSlot(gear_slot_t slot, Gun gun)
-    {
-        if (slot == gear_slot_t.GEAR_SLOT_RIFLE && _primary != null && _primary != gun)
-            _primary = gun;
-        else if (slot == gear_slot_t.GEAR_SLOT_PISTOL && _secondary != null && _secondary != gun)
-            _secondary = gun;
-    }
-
     public void SetNoPrimary(bool value)
     {
         _noPrimary = value;

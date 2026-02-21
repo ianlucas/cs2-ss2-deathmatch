@@ -73,7 +73,7 @@ public partial class Deathmatch
             return true;
         if (DMCtx.GetCurrentMode()?.AllowsGun(gun) != true)
             return false;
-        player.GetState().GetLoadout().UpdateSlot(gun.GearSlot, gun);
+        player.GetState().GetLoadout().Set(gun);
         return true;
     }
 }
