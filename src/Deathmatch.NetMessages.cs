@@ -10,8 +10,9 @@ namespace Deathmatch;
 
 public partial class Deathmatch
 {
-    public HookResult OnMsgTEWorldDecal(CMsgTEWorldDecal msg)
+    public HookResult OnMsgPlaceDecal(CMsgPlaceDecalEvent msg)
     {
+        msg.Recipients.RemoveAllPlayers();
         return HookResult.Stop;
     }
 }
