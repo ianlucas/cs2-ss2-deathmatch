@@ -18,6 +18,18 @@ public partial class Deathmatch
         return HookResult.Continue;
     }
 
+    public static HookResult OnItemPickup(EventItemPickup @event)
+    {
+        var controller = @event.UserIdController;
+        var inGameMoneyServices = controller.InGameMoneyServices;
+        if (inGameMoneyServices != null)
+        {
+            inGameMoneyServices.Account = 10000;
+            controller.InGameMoneyServicesUpdated();
+        }
+        return HookResult.Continue;
+    }
+
     public HookResult OnPlayerDeath(EventPlayerDeath @event)
     {
         var attacker = @event.AttackerPlayer;

@@ -73,7 +73,7 @@ public static class Config
             "mp_maxmoney 0",
             "mp_maxrounds 0",
             "mp_playercashawards 0",
-            "mp_startmoney 0",
+            "mp_startmoney 10000",
             "mp_teamcashawards 0",
             "mp_timelimit 2",
             "mp_weapons_allow_zeus 0",
