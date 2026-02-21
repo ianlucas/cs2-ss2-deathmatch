@@ -45,17 +45,22 @@ public static class IPlayerExtensions
             }
         }
 
+        public void GiveGun(Gun gun)
+        {
+            var originalTeam = self.Controller.Team;
+            if (gun.Team != Team.None && gun.Team != originalTeam)
+                self.Controller.Team = gun.Team;
+            self.PlayerPawn?.ItemServices?.GiveItem(gun.DesignerName);
+            self.Controller.Team = originalTeam;
+        }
+
         public void SwitchGun(Gun gun)
         {
             var mode = DMCtx.GetCurrentMode();
             if (mode == null)
                 return;
-            var originalTeam = self.Controller.Team;
             self.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gun.GearSlot);
-            if (gun.Team != Team.None && gun.Team != originalTeam)
-                self.Controller.Team = gun.Team;
-            self.PlayerPawn?.ItemServices?.GiveItem(gun.DesignerName);
-            self.Controller.Team = originalTeam;
+            self.GiveGun(gun);
             self.GetState().GetLoadout().Set(gun);
             self.PlayerPawn?.WeaponServices?.SelectWeaponBySlot(gun.GearSlot);
         }
@@ -85,21 +90,10 @@ public static class IPlayerExtensions
                     loadout.GetPrimary()
                     ?? (loadout.HasNoPrimary() ? null : mode.GetDefaultPrimary());
                 var secondary = loadout.GetSecondary() ?? mode.GetDefaultSecondary();
-                var originalTeam = self.Controller.Team;
                 if (secondary != null)
-                {
-                    if (secondary.Team != Team.None && secondary.Team != originalTeam)
-                        self.Controller.Team = secondary.Team;
-                    pawn?.ItemServices?.GiveItem(secondary.DesignerName);
-                    self.Controller.Team = originalTeam;
-                }
+                    self.GiveGun(secondary);
                 if (primary != null)
-                {
-                    if (primary.Team != Team.None && primary.Team != originalTeam)
-                        self.Controller.Team = primary.Team;
-                    pawn?.ItemServices?.GiveItem(primary.DesignerName);
-                    self.Controller.Team = originalTeam;
-                }
+                    self.GiveGun(primary);
             }
         }
     }
