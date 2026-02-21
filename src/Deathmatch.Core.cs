@@ -3,6 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+using Microsoft.Extensions.Logging;
+using SwiftlyS2.Shared.GameEventDefinitions;
 using SwiftlyS2.Shared.Players;
 using SwiftlyS2.Shared.ProtobufDefinitions;
 using SwiftlyS2.Shared.SchemaDefinitions;
@@ -41,9 +43,23 @@ public partial class Deathmatch
         player.SwitchGun(gun);
     }
 
+    public static void HandlePlayerPrintHelp(IPlayer player)
+    {
+        player.SendChat($"{DMCtx.GetChatPrefix()} DM SERVER");
+        player.SendChat("Commands available to you:");
+        player.SendChat("![green]help -[white] prints help");
+        player.SendChat("![green]guns -[white] shows weapons commands");
+    }
+
     public static void HandlePlayerSpawn(IPlayer player)
     {
         player.GiveLoadout();
+        var session = player.GetSessionState();
+        if (!session.IsInitialHelpSent)
+        {
+            HandlePlayerPrintHelp(player);
+            session.IsInitialHelpSent = true;
+        }
     }
 
     public static void HandlePlayerWeaponKill(
@@ -66,6 +82,21 @@ public partial class Deathmatch
         }
     }
 
+    public void HandlePlayerDeath(IPlayer attacker, IPlayer victim)
+    {
+        // TODO This is crashing right now.
+        // var record = attacker.Controller.DamageServices?.DamageList.FirstOrDefault(r =>
+        //     r.PlayerControllerDamager.Value?.SteamID == victim.SteamID
+        // );
+        // if (record == null)
+        //     return;
+        // var damage = record.NumHits > 0 ? $"[yellow]{(int)record.Damage}" : "[red]no";
+        // var hits = record.NumHits > 0 ? $" ([lime]{record.NumHits}[white])" : "";
+        // victim.SendChat(
+        //     $"You did {damage}[white]{hits} damage to [lime]{attacker.Controller.PlayerName}[white]."
+        // );
+    }
+
     public static bool HandlePlayerGunAcquire(IPlayer player, Gun gun, CCSWeaponBaseVData vData)
     {
         if (
@@ -77,5 +108,10 @@ public partial class Deathmatch
             return false;
         player.GetState().GetLoadout().Set(gun);
         return true;
+    }
+
+    public static void HandlePlayerDisconnect(IPlayer player)
+    {
+        player.RemoveSessionState();
     }
 }

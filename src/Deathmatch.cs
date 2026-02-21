@@ -32,9 +32,11 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
         Core.Event.OnMapLoad += OnMapLoad;
         Core.Event.OnTick += OnTick;
         Core.Event.OnItemServicesCanAcquireHook += OnCanAcquire;
+        Core.GameEvent.HookPre<EventPlayerTeam>(OnPlayerTeamPre);
         Core.GameEvent.HookPost<EventPlayerSpawn>(OnPlayerSpawn);
         Core.GameEvent.HookPost<EventItemPickup>(OnItemPickup);
         Core.GameEvent.HookPost<EventPlayerDeath>(OnPlayerDeath);
+        Core.GameEvent.HookPost<EventPlayerDisconnect>(OnPlayerDisconnect);
         Core.Command.HookClientCommand(OnClientCommand);
         Core.NetMessage.HookServerMessage<CMsgPlaceDecalEvent>(OnMsgPlaceDecal);
         foreach (var gun in Guns.All)

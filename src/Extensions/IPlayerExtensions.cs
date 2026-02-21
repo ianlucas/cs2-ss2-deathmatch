@@ -11,18 +11,29 @@ namespace Deathmatch;
 
 public static class IPlayerExtensions
 {
-    private static readonly ConcurrentDictionary<ulong, PlayerState> _playerStateManager = [];
+    private static readonly ConcurrentDictionary<ulong, PlayerState> _stateMng = [];
+    private static readonly ConcurrentDictionary<ulong, PlayerSessionState> _sessionStateMng = [];
 
     extension(IPlayer self)
     {
         public PlayerState GetState()
         {
-            return _playerStateManager.GetOrAdd(self.SteamID, _ => new());
+            return _stateMng.GetOrAdd(self.SteamID, _ => new());
+        }
+
+        public PlayerSessionState GetSessionState()
+        {
+            return _sessionStateMng.GetOrAdd(self.SteamID, _ => new());
         }
 
         public void RemoveState()
         {
-            _playerStateManager.TryRemove(self.SteamID, out var _);
+            _stateMng.TryRemove(self.SteamID, out var _);
+        }
+
+        public void RemoveSessionState()
+        {
+            _sessionStateMng.TryRemove(self.SteamID, out var _);
         }
 
         public void SetHealth(int value)

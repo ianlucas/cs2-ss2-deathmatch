@@ -10,6 +10,11 @@ namespace Deathmatch;
 
 public partial class Deathmatch
 {
+    public HookResult OnPlayerTeamPre(EventPlayerTeam @event)
+    {
+        return HookResult.Stop;
+    }
+
     public HookResult OnPlayerSpawn(EventPlayerSpawn @event)
     {
         var player = @event.UserIdPlayer;
@@ -32,13 +37,24 @@ public partial class Deathmatch
 
     public HookResult OnPlayerDeath(EventPlayerDeath @event)
     {
+        var victim = @event.UserIdPlayer;
         var attacker = @event.AttackerPlayer;
-        if (attacker != null)
+        if (attacker != null && victim != null)
         {
             var weapon = attacker.PlayerPawn?.WeaponServices?.ActiveWeapon.Value;
             if (weapon != null)
                 HandlePlayerWeaponKill(attacker, weapon, @event.Headshot);
+            if (!victim.IsFakeClient && attacker != victim)
+                HandlePlayerDeath(attacker, victim);
         }
+        return HookResult.Continue;
+    }
+
+    public HookResult OnPlayerDisconnect(EventPlayerDisconnect @event)
+    {
+        var player = @event.UserIdPlayer;
+        if (player != null)
+            HandlePlayerDisconnect(player);
         return HookResult.Continue;
     }
 }

@@ -28,4 +28,12 @@ public partial class Deathmatch
             player.GetState().GetLoadout().SetNoPrimary(true);
         }
     }
+
+    [Command("help")]
+    public void OnHelpCommand(ICommandContext context)
+    {
+        var player = context.Sender;
+        if (player != null)
+            HandlePlayerPrintHelp(player);
+    }
 }
