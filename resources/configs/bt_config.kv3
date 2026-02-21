@@ -16,8 +16,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -28,7 +28,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
@@ -66,8 +66,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -78,7 +78,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
@@ -116,8 +116,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -128,7 +128,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
@@ -166,8 +166,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -178,7 +178,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
@@ -216,8 +216,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -228,7 +228,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
@@ -266,8 +266,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -278,7 +278,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
@@ -316,8 +316,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -328,7 +328,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
@@ -366,8 +366,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -378,7 +378,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
@@ -416,8 +416,8 @@
 		aim_target_tracking_angle_lerp_bias = 0.95
 		aim_ready_angle_tolerance = 0.5
 		aim_new_target_angle_tolerance = 180.0
-		aim_max_duration = 5.0
-		aim_max_duration_deviation = 1.0
+		aim_max_duration = 0.5
+		aim_max_duration_deviation = 0.1
 		aim_punch_angle_reaction_chance = 1.0
 
 		look_around_awareness_yaw_range = 180
@@ -428,7 +428,7 @@
 		look_around_lerp_time_deviation = 0.01
 		look_around_lerp_bias = 0.95
 
-		reaction_time = 0.01
+		reaction_time = 0.05
 
 		combat_crouch_chance = 0.5
 		combat_dodge_command_duration = 0.5
