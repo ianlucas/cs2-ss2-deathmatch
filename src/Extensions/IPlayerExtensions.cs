@@ -59,9 +59,12 @@ public static class IPlayerExtensions
             var mode = DMCtx.GetCurrentMode();
             if (mode == null)
                 return;
+            var loadout = self.GetState().GetLoadout();
+            if (loadout.GetPrimary() == gun)
+                return;
             self.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gun.GearSlot);
             self.GiveGun(gun);
-            self.GetState().GetLoadout().Set(gun);
+            loadout.Set(gun);
             self.PlayerPawn?.WeaponServices?.SelectWeaponBySlot(gun.GearSlot);
         }
 

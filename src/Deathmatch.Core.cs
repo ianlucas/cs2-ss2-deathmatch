@@ -21,13 +21,15 @@ public partial class Deathmatch
         {
             if (!player.IsFakeClient && player.IsAlive)
             {
-                player.SendAlert($"Session - {player.GetKDR()} K/D\nPRO - 2.50 K/D");
                 if (Core.Engine.GlobalVars.TickCount % 64 == 0)
+                {
+                    player.SendAlert($"Session - {player.GetKDR()} K/D\nPRO - 2.50 K/D");
                     Core.NetMessage.Send<CCSUsrMsg_HintText>(msg =>
                     {
                         msg.Message = $"Current: {current}\nRemaining: {remaining}\nNext: {next}";
                         msg.SendToPlayer(player.PlayerID);
                     });
+                }
             }
         }
     }
