@@ -71,10 +71,9 @@ public partial class Deathmatch
             && vData.GearSlot != gear_slot_t.GEAR_SLOT_PISTOL
         )
             return true;
-        var mode = DMCtx.GetCurrentMode();
-        if (mode == null || !mode.AllowsGun(gun))
+        if (DMCtx.GetCurrentMode()?.AllowsGun(gun) != true)
             return false;
-        player.GetState().GetLoadout(mode.Name).UpdateSlot(gun.GearSlot, gun);
+        player.GetState().GetLoadout().UpdateSlot(gun.GearSlot, gun);
         return true;
     }
 }

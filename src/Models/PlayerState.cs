@@ -11,8 +11,8 @@ public class PlayerState
 {
     private readonly ConcurrentDictionary<string, PlayerLoadout> _loadout = new();
 
-    public PlayerLoadout GetLoadout(string name)
+    public PlayerLoadout GetLoadout()
     {
-        return _loadout.GetOrAdd(name, _ => new());
+        return _loadout.GetOrAdd(DMCtx.GetCurrentMode()?.Name ?? "Default", _ => new());
     }
 }

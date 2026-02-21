@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 using SwiftlyS2.Shared.Commands;
+using SwiftlyS2.Shared.SchemaDefinitions;
 
 namespace Deathmatch;
 
@@ -15,5 +16,16 @@ public partial class Deathmatch
         context.Sender?.SendChat(
             $"Weapons: {string.Join("[white], ", (DMCtx.GetCurrentMode()?.GetGuns() ?? []).Select(g => $"[lime]!{g.Aliases[0]}"))}"
         );
+    }
+
+    [Command("noprimary")]
+    public void OnNoprimaryCommand(ICommandContext context)
+    {
+        var player = context.Sender;
+        if (player != null)
+        {
+            player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_RIFLE);
+            player.GetState().GetLoadout().SetNoPrimary(true);
+        }
     }
 }

@@ -9,22 +9,38 @@ namespace Deathmatch;
 
 public class PlayerLoadout
 {
-    public Gun? Primary;
-    public Gun? Secondary;
+    private bool _noPrimary = false;
+
+    private Gun? _primary;
+    private Gun? _secondary;
 
     public void Set(Gun gun)
     {
         if (gun.IsSecondary)
-            Secondary = gun;
+            _secondary = gun;
         else
-            Primary = gun;
+        {
+            _primary = gun;
+            _noPrimary = false;
+        }
     }
 
     public void UpdateSlot(gear_slot_t slot, Gun gun)
     {
-        if (slot == gear_slot_t.GEAR_SLOT_RIFLE && Primary != null && Primary != gun)
-            Primary = gun;
-        else if (slot == gear_slot_t.GEAR_SLOT_PISTOL && Secondary != null && Secondary != gun)
-            Secondary = gun;
+        if (slot == gear_slot_t.GEAR_SLOT_RIFLE && _primary != null && _primary != gun)
+            _primary = gun;
+        else if (slot == gear_slot_t.GEAR_SLOT_PISTOL && _secondary != null && _secondary != gun)
+            _secondary = gun;
     }
+
+    public void SetNoPrimary(bool value)
+    {
+        _noPrimary = value;
+    }
+
+    public Gun? GetPrimary() => _primary;
+
+    public Gun? GetSecondary() => _secondary;
+
+    public bool HasNoPrimary() => _noPrimary;
 }

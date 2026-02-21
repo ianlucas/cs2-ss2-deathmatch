@@ -56,7 +56,7 @@ public static class IPlayerExtensions
                 self.Controller.Team = gun.Team;
             self.PlayerPawn?.ItemServices?.GiveItem(gun.DesignerName);
             self.Controller.Team = originalTeam;
-            self.GetState().GetLoadout(mode.Name).Set(gun);
+            self.GetState().GetLoadout().Set(gun);
             self.PlayerPawn?.WeaponServices?.SelectWeaponBySlot(gun.GearSlot);
         }
 
@@ -80,9 +80,11 @@ public static class IPlayerExtensions
             }
             else
             {
-                var loadout = self.GetState().GetLoadout(mode.Name);
-                var primary = loadout.Primary ?? mode.GetDefaultPrimary();
-                var secondary = loadout.Secondary ?? mode.GetDefaultSecondary();
+                var loadout = self.GetState().GetLoadout();
+                var primary =
+                    loadout.GetPrimary()
+                    ?? (loadout.HasNoPrimary() ? null : mode.GetDefaultPrimary());
+                var secondary = loadout.GetSecondary() ?? mode.GetDefaultSecondary();
                 var originalTeam = self.Controller.Team;
                 if (secondary != null)
                 {
