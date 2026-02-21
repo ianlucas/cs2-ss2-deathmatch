@@ -73,11 +73,11 @@ public static class IPlayerExtensions
             var pawn = (self.IsFakeClient ? self.PlayerPawn : self.Pawn)?.As<CCSPlayerPawn>();
             if (self.IsFakeClient)
             {
-                var botLoadout = mode.BotLoadout;
-                if (botLoadout == null)
+                var loadout = mode.BotLoadout;
+                if (loadout == null)
                     return;
-                var secondary = PickBotGun(botLoadout.Secondary);
-                var primary = botLoadout.Primary != null ? PickBotGun(botLoadout.Primary) : null;
+                var secondary = PickBotGun(loadout.Secondary);
+                var primary = loadout.Primary != null ? PickBotGun(loadout.Primary) : null;
                 if (secondary != null)
                     pawn?.ItemServices?.GiveItem(secondary.DesignerName);
                 if (primary != null)
