@@ -25,13 +25,9 @@ public partial class Deathmatch
 
     public static HookResult OnItemPickup(EventItemPickup @event)
     {
-        var controller = @event.UserIdController;
-        var inGameMoneyServices = controller.InGameMoneyServices;
-        if (inGameMoneyServices != null)
-        {
-            inGameMoneyServices.Account = 10000;
-            controller.InGameMoneyServicesUpdated();
-        }
+        var player = @event.UserIdPlayer;
+        if (player != null)
+            HandlePlayerItemPickup(player);
         return HookResult.Continue;
     }
 

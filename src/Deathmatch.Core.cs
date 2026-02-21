@@ -62,6 +62,16 @@ public partial class Deathmatch
         }
     }
 
+    public static void HandlePlayerItemPickup(IPlayer player)
+    {
+        var inGameMoneyServices = player.Controller.InGameMoneyServices;
+        if (inGameMoneyServices != null)
+        {
+            inGameMoneyServices.Account = 10000;
+            inGameMoneyServices.AccountUpdated();
+        }
+    }
+
     public static void HandlePlayerWeaponKill(
         IPlayer player,
         CBasePlayerWeapon weapon,
