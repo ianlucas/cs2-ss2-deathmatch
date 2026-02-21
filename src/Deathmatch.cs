@@ -6,6 +6,7 @@
 using SwiftlyS2.Shared;
 using SwiftlyS2.Shared.GameEventDefinitions;
 using SwiftlyS2.Shared.Plugins;
+using SwiftlyS2.Shared.ProtobufDefinitions;
 
 namespace Deathmatch;
 
@@ -32,6 +33,7 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
         Core.GameEvent.HookPost<EventPlayerSpawn>(OnPlayerSpawn);
         Core.GameEvent.HookPost<EventItemPickup>(OnItemPickup);
         Core.GameEvent.HookPost<EventPlayerDeath>(OnPlayerDeath);
+        Core.NetMessage.HookServerMessage<CMsgTEWorldDecal>(OnMsgTEWorldDecal);
         foreach (var gun in Guns.All)
         foreach (var name in gun.Aliases)
             Core.Command.RegisterCommand(
