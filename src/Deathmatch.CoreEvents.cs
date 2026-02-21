@@ -53,12 +53,8 @@ public partial class Deathmatch
             return;
         if (vData.GearSlot == gear_slot_t.GEAR_SLOT_KNIFE)
             return;
-        var gun = DMCtx.Guns.FirstOrDefault(g =>
-            g.ItemDef == @event.EconItemView.ItemDefinitionIndex
-        );
+        var gun = Guns.GetByItemDef(@event.EconItemView.ItemDefinitionIndex);
         if (gun == null || !HandlePlayerGunAcquire(player, gun, vData))
             @event.SetAcquireResult(AcquireResult.NotAllowedByMode);
-        else
-            @event.SetAcquireResult(AcquireResult.Allowed);
     }
 }

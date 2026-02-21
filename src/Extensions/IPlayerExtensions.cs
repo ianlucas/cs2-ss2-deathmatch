@@ -76,8 +76,8 @@ public static class IPlayerExtensions
             else
             {
                 var loadout = self.GetState().GetLoadout(mode.Name);
-                var primary = loadout.Primary ?? DMCtx.DefaultGuns?.Primary;
-                var secondary = loadout.Secondary ?? DMCtx.DefaultGuns?.Secondary;
+                var primary = loadout.Primary ?? mode.GetDefaultPrimary();
+                var secondary = loadout.Secondary ?? mode.GetDefaultSecondary();
                 if (secondary != null)
                     pawn?.ItemServices?.GiveItem(secondary.DesignerName);
                 if (primary != null)
@@ -94,7 +94,7 @@ public static class IPlayerExtensions
         {
             cumulative += botGun.Probability;
             if (roll < cumulative)
-                return DMCtx.Guns.FirstOrDefault(g => g.DesignerName == $"weapon_{botGun.Gun}");
+                return Guns.Find(botGun.Gun);
         }
         return null;
     }

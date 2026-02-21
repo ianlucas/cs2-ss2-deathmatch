@@ -34,7 +34,7 @@ public partial class Deathmatch
 
     public static void HandlePlayerGunRequest(IPlayer player, Gun gun)
     {
-        if (!player.IsAlive || !DMCtx.AllowsGun(gun))
+        if (!player.IsAlive || DMCtx.GetCurrentMode()?.AllowsGun(gun) != true)
             return;
         player.SwitchGun(gun);
     }
@@ -72,7 +72,7 @@ public partial class Deathmatch
         )
             return true;
         var mode = DMCtx.GetCurrentMode();
-        if (mode == null || !DMCtx.AllowsGun(gun))
+        if (mode == null || !mode.AllowsGun(gun))
             return false;
         player.GetState().GetLoadout(mode.Name).UpdateSlot(gun.GearSlot, gun);
         return true;
