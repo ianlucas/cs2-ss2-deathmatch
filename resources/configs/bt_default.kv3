@@ -1,6 +1,6 @@
 <!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
-	config = "scripts/ai/deathmatch/bt_config.kv3"
+	config = "addons/swiftlys2/plugins/Deathmatch/resources/configs/bt_config.kv3"
 	root =
 	{
 		type = "decorator_bot_service"
@@ -8,18 +8,18 @@
 		[
 			{
 				key = "ShortTermAttackMemory"
-				time = 0.7
+				time = 3.0
 				distance = 0
 			},
 			{
 				key = "LongTermMemory"
-				time = 10
-				distance = 500
+				time = 30
+				distance = 2000
 			},
 			{
 				key = "ShortTermInvestigateMemory"
-				time = 3
-				distance = 200
+				time = 10
+				distance = 1000
 			}
 		]
 		child =
