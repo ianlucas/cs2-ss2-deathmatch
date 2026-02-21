@@ -33,7 +33,7 @@ public partial class Deathmatch
     public void OnConfigsExecuted()
     {
         Config.ExecDeathmatch();
-        Core.ConVar.Find<int>("sv_infinite_ammo")?.Value = 2;
+        ConVars.InfinityAmmo.Value = 2;
     }
 
     public HookResult OnClientCommand(int playerid, string commandLine)

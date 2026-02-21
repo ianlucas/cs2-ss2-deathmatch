@@ -65,7 +65,6 @@ public static class Config
             "mp_defuser_allocation 0",
             "mp_force_pick_time 15",
             "mp_forcecamera 0",
-            "mp_free_armor 0",
             "mp_freezetime 0",
             "mp_friendlyfire 1",
             "mp_win_panel_display_time 1",
