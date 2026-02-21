@@ -3,10 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-using SwiftlyS2.Shared.Events;
 using SwiftlyS2.Shared.GameEventDefinitions;
 using SwiftlyS2.Shared.Misc;
-using SwiftlyS2.Shared.ProtobufDefinitions;
 
 namespace Deathmatch;
 
@@ -22,6 +20,13 @@ public partial class Deathmatch
 
     public HookResult OnPlayerDeath(EventPlayerDeath @event)
     {
+        var attacker = @event.AttackerPlayer;
+        if (attacker != null)
+        {
+            var weapon = attacker.PlayerPawn?.WeaponServices?.ActiveWeapon.Value;
+            if (weapon != null)
+                HandlePlayerWeaponKill(attacker, weapon, @event.Headshot);
+        }
         return HookResult.Continue;
     }
 }

@@ -173,6 +173,7 @@ public static class DMCtx
         if (secondary != null)
             DefaultGuns = (secondary, primary);
         ResetAllPlayers();
+        Swiftly.Core.ConVar.Find<int>("mp_free_armor")?.Value = _currentMode.Value.Helmet ? 2 : 1;
     }
 
     private static void RebuildCurrentGuns(Mode mode)
@@ -217,14 +218,19 @@ public static class DMCtx
 
     private static void ResetAllPlayers()
     {
+        var hasHelmet = GetCurrentMode()?.Helmet == true;
         foreach (
             var player in Swiftly.Core.PlayerManager.GetAllValidPlayers().Where(p => p.IsAlive)
         )
         {
+            var pawn = (player.IsFakeClient ? player.Pawn : player.PlayerPawn)?.As<CCSPlayerPawn>();
             player.SetHealth(100);
-            player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_PISTOL);
-            player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_RIFLE);
+            pawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_PISTOL);
+            pawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_RIFLE);
             player.GiveLoadout();
+            pawn?.ItemServices?.HasHelmet = hasHelmet;
+            pawn?.ItemServices?.HasHelmetUpdated();
+            player.SetArmor(100);
         }
     }
 }

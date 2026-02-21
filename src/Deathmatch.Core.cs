@@ -44,6 +44,26 @@ public partial class Deathmatch
         player.GiveLoadout();
     }
 
+    public static void HandlePlayerWeaponKill(
+        IPlayer player,
+        CBasePlayerWeapon weapon,
+        bool isHeadshot
+    )
+    {
+        var vData = weapon.PlayerWeaponVData;
+        weapon.Clip1 = vData.DefaultClip1 + 1;
+        weapon.Clip1Updated();
+        var pawn = (player.IsFakeClient ? player.Pawn : player.PlayerPawn)?.As<CCSPlayerPawn>();
+        if (pawn != null && pawn.IsValid && player.IsAlive)
+        {
+            var amount = isHeadshot ? 25 : 10;
+            pawn.Health = Math.Min(Math.Max(pawn.Health + amount, 0), 100);
+            pawn.HealthUpdated();
+            pawn.ArmorValue = Math.Min(Math.Max(pawn.ArmorValue + amount, 0), 100);
+            pawn.ArmorValueUpdated();
+        }
+    }
+
     public static bool HandlePlayerGunAcquire(IPlayer player, Gun gun, CCSWeaponBaseVData vData)
     {
         if (

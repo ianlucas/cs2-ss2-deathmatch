@@ -60,6 +60,7 @@ public static class IPlayerExtensions
             var mode = DMCtx.GetCurrentMode();
             if (mode == null)
                 return;
+            var pawn = (self.IsFakeClient ? self.PlayerPawn : self.Pawn)?.As<CCSPlayerPawn>();
             if (self.IsFakeClient)
             {
                 var botLoadout = mode.BotLoadout;
@@ -67,12 +68,10 @@ public static class IPlayerExtensions
                     return;
                 var secondary = PickBotGun(botLoadout.Secondary);
                 var primary = botLoadout.Primary != null ? PickBotGun(botLoadout.Primary) : null;
-                var pawn = self.Pawn?.As<CCSPlayerPawn>();
                 if (secondary != null)
                     pawn?.ItemServices?.GiveItem(secondary.DesignerName);
                 if (primary != null)
                     pawn?.ItemServices?.GiveItem(primary.DesignerName);
-                return;
             }
             else
             {
@@ -80,16 +79,9 @@ public static class IPlayerExtensions
                 var primary = loadout.Primary ?? DMCtx.DefaultGuns?.Primary;
                 var secondary = loadout.Secondary ?? DMCtx.DefaultGuns?.Secondary;
                 if (secondary != null)
-                    self.PlayerPawn?.ItemServices?.GiveItem(secondary.DesignerName);
+                    pawn?.ItemServices?.GiveItem(secondary.DesignerName);
                 if (primary != null)
-                    self.PlayerPawn?.ItemServices?.GiveItem(primary.DesignerName);
-            }
-            self.SetArmor(100);
-            if (self.PlayerPawn?.ItemServices?.HasHelmet != mode.Helmet)
-            {
-                self.SendChat($"helmet={mode.Helmet}");
-                self.PlayerPawn?.ItemServices?.HasHelmet = mode.Helmet;
-                self.PlayerPawn?.ItemServices?.HasHelmetUpdated();
+                    pawn?.ItemServices?.GiveItem(primary.DesignerName);
             }
         }
     }
