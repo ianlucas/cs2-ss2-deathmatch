@@ -3,8 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-using SwiftlyS2.Shared.SchemaDefinitions;
-
 namespace Deathmatch;
 
 public class PlayerLoadout
@@ -30,7 +28,7 @@ public class PlayerLoadout
         _noPrimary = value;
     }
 
-    public Gun? GetPrimary() => _primary;
+    public Gun? GetPrimary() => _noPrimary ? null : _primary;
 
     public Gun? GetSecondary() => _secondary;
 
