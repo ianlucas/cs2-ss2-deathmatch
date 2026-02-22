@@ -1,92 +1,88 @@
 [
-    {
-        "name": "Pistols",
-        "weapons": [
-            "usp_silencer",
-            "deagle",
-            "elite",
-            "fiveseven",
-            "glock",
-            "tec9",
-            "hkp2000",
-            "p250",
-            "cz75a",
-            "revolver"
-        ],
-        "helmet": false,
-        "duration": 100,
-        "bots": {
-            "secondary": [
-                { "weapon": "usp_silencer", "probability": 0.8 },
-                { "weapon": "glock", "probability": 0.1 },
-                { "weapon": "deagle", "probability": 0.1 }
-            ]
-        }
-    },
-    {
-        "name": "Mid-Tier",
-        "weapons": [
-            "deagle",
-            "mp9",
-            "usp_silencer",
-            "elite",
-            "fiveseven",
-            "glock",
-            "tec9",
-            "hkp2000",
-            "p250",
-            "cz75a",
-            "revolver",
-            "mac10",
-            "mp5sd",
-            "mp7",
-            "ump45"
-        ],
-        "duration": 100,
-        "bots": {
-            "secondary": [
-                { "weapon": "deagle", "probability": 1.0 }
-            ],
-            "primary": [
-                { "weapon": "mp9", "probability": 0.3 },
-                { "weapon": "mac10", "probability": 0.1 }
-            ]
-        }
-    },
-    {
-        "name": "Rifles",
-        "weapons": [
-            "deagle",
-            "ak47",
-            "usp_silencer",
-            "elite",
-            "fiveseven",
-            "glock",
-            "tec9",
-            "hkp2000",
-            "p250",
-            "cz75a",
-            "revolver",
-            "m4a1",
-            "m4a1_silencer",
-            "aug",
-            "sg556",
-            "famas",
-            "galilar",
-            "awp",
-            "ssg08"
-        ],
-        "duration": 100,
-        "bots": {
-            "secondary": [
-                { "weapon": "deagle", "probability": 1.0 }
-            ],
-            "primary": [
-                { "weapon": "ak47", "probability": 0.7 },
-                { "weapon": "m4a1", "probability": 0.1 },
-                { "weapon": "m4a1_silencer", "probability": 0.1 },
-                { "weapon": "awp", "probability": 0.1 }
-            ]
-        }
+  {
+    "name": "Pistols",
+    "weapons": [
+      "usp_silencer",
+      "deagle",
+      "elite",
+      "fiveseven",
+      "glock",
+      "tec9",
+      "hkp2000",
+      "p250",
+      "cz75a",
+      "revolver"
+    ],
+    "helmet": false,
+    "duration": 300,
+    "bots": {
+      "secondary": [
+        { "weapon": "usp_silencer", "probability": 0.8 },
+        { "weapon": "glock", "probability": 0.1 },
+        { "weapon": "deagle", "probability": 0.1 }
+      ]
     }
+  },
+  {
+    "name": "Mid-Tier",
+    "weapons": [
+      "deagle",
+      "mp9",
+      "usp_silencer",
+      "elite",
+      "fiveseven",
+      "glock",
+      "tec9",
+      "hkp2000",
+      "p250",
+      "cz75a",
+      "revolver",
+      "mac10",
+      "mp5sd",
+      "mp7",
+      "ump45"
+    ],
+    "duration": 300,
+    "bots": {
+      "secondary": [{ "weapon": "deagle", "probability": 1.0 }],
+      "primary": [
+        { "weapon": "mp9", "probability": 0.3 },
+        { "weapon": "mac10", "probability": 0.1 }
+      ]
+    }
+  },
+  {
+    "name": "Rifles",
+    "weapons": [
+      "deagle",
+      "ak47",
+      "usp_silencer",
+      "elite",
+      "fiveseven",
+      "glock",
+      "tec9",
+      "hkp2000",
+      "p250",
+      "cz75a",
+      "revolver",
+      "m4a1",
+      "m4a1_silencer",
+      "aug",
+      "sg556",
+      "famas",
+      "galilar",
+      "awp",
+      "ssg08"
+    ],
+    "duration": 1200,
+    "bots": {
+      "secondary": [{ "weapon": "deagle", "probability": 1.0 }],
+      "primary": [
+        { "weapon": "ak47", "probability": 0.7 },
+        { "weapon": "m4a1", "probability": 0.1 },
+        { "weapon": "m4a1_silencer", "probability": 0.1 },
+        { "weapon": "awp", "probability": 0.1 }
+      ]
+    }
+  }
 ]

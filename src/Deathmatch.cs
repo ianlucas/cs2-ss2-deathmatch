@@ -16,7 +16,7 @@ namespace Deathmatch;
     Version = "1.0.0",
     Name = "Deathmatch",
     Author = "Ian Lucas",
-    Description = "Deathmatch gamemode."
+    Description = "Free-for-all deathmatch with configurable weapons."
 )]
 public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
 {
