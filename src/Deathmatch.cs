@@ -7,6 +7,7 @@ using SwiftlyS2.Shared;
 using SwiftlyS2.Shared.GameEventDefinitions;
 using SwiftlyS2.Shared.Plugins;
 using SwiftlyS2.Shared.ProtobufDefinitions;
+using SwiftlyS2.Shared.Sounds;
 
 namespace Deathmatch;
 
@@ -20,6 +21,7 @@ namespace Deathmatch;
 public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
 {
     public bool PendingInternalPush = true;
+    public readonly SoundEvent CountdownBeepSound = new("Alert.WarmupTimeoutBeep");
 
     public override void Load(bool hotReload)
     {

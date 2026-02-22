@@ -21,9 +21,13 @@ public partial class Deathmatch
     public void HandleOnTick()
     {
         DMCtx.Think();
+        if (Core.Engine.GlobalVars.TickCount % 64 != 0)
+            return;
         var hudNa = Core.Localizer["dm.hud_na"];
-        var current = DMCtx.GetCurrentMode()?.Name ?? hudNa;
+        var current = DMCtx.GetCurrentMode();
+        var name = current?.Name ?? hudNa;
         var remaining = DMCtx.GetRemainingTime();
+        var remainingMmSs = TimeHelper.FormatMmSs(remaining);
         var next = DMCtx.GetNextMode()?.Name ?? hudNa;
         var hudSession = Core.Localizer["dm.hud_session"];
         var hudPro = Core.Localizer["dm.hud_pro"];
@@ -31,14 +35,16 @@ public partial class Deathmatch
         var hudCurrent = Core.Localizer["dm.hud_current"];
         var hudRemaining = Core.Localizer["dm.hud_remaining"];
         var hudNext = Core.Localizer["dm.hud_next"];
-        var hudMessage = $"{hudCurrent} {current}\n{hudRemaining} {remaining}\n{hudNext} {next}";
-        var showHudMessage = DMCtx.GetModeCount() > 0;
+        var hudMessage = $"{hudCurrent} {name}\n{hudRemaining} {remainingMmSs}\n{hudNext} {next}";
+        var showHudMessage = DMCtx.HasMultipleModes();
+        if (remaining <= 3)
+        {
+            CountdownBeepSound.Recipients.AddAllPlayers();
+            CountdownBeepSound.Emit();
+            CountdownBeepSound.Recipients.RemoveAllPlayers();
+        }
         foreach (var player in Core.PlayerManager.GetAllValidPlayers())
-            if (
-                !player.IsFakeClient
-                && player.IsAlive
-                && Core.Engine.GlobalVars.TickCount % 64 == 0
-            )
+            if (!player.IsFakeClient)
             {
                 player.SendAlert(
                     $"{hudSession} - {player.GetKDR()} K/D\n{hudPro} - {hudProRatio} K/D"
@@ -73,6 +79,7 @@ public partial class Deathmatch
         var session = player.GetSessionState();
         if (!session.IsInitialHelpSent)
         {
+            player.ResetStats();
             HandlePlayerPrintHelp(player);
             session.IsInitialHelpSent = true;
         }

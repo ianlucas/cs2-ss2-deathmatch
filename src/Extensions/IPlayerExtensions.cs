@@ -120,6 +120,17 @@ public static class IPlayerExtensions
             var deaths = Math.Max(1, matchStats.Deaths);
             return (kills / (float)deaths).ToString("0.00");
         }
+
+        public void ResetStats()
+        {
+            var matchStats = self.Controller.ActionTrackingServices?.MatchStats;
+            if (matchStats == null)
+                return;
+            matchStats.Kills = 0;
+            matchStats.KillsUpdated();
+            matchStats.Deaths = 0;
+            matchStats.DeathsUpdated();
+        }
     }
 
     private static Weapon? PickBotWeapon(List<BotWeapon> botWeapons)
