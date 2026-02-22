@@ -1,0 +1,15 @@
+{
+  "dm.help_header": "{0} DM SERVER",
+  "dm.help_commands": "Comandos disponíveis para você:",
+  "dm.help_commands_help": "![green]help -[white] exibe ajuda",
+  "dm.help_commands_guns": "![green]guns -[white] exibe armas disponíveis",
+  "dm.guns": "{0} Armas: {1}",
+  "dm.attacker_damage_hit": "acerto",
+  "dm.attacker_damage_hits": "acertos",
+  "dm.attacker_damage": "{0} Você tirou [yellow]{1}[white]{2} de [lime]{3}[white].",
+  "dm.attacker_damage_no": "{0} Você [red]não[white] acertou [lime]{1}[white].",
+  "dm.hud_session": "Sessão",
+  "dm.hud_current": "Atual:",
+  "dm.hud_remaining": "Restante:",
+  "dm.hud_next": "Próximo:"
+}

@@ -13,8 +13,18 @@ public partial class Deathmatch
     [Command("guns")]
     public void OnGunsCommand(ICommandContext context)
     {
+        var mode = DMCtx.GetCurrentMode();
         context.Sender?.SendChat(
-            $"Weapons: {string.Join("[white], ", (DMCtx.GetCurrentMode()?.GetGuns() ?? []).Select(g => $"[lime]!{g.Aliases[0]}"))}"
+            Core.Localizer[
+                "dm.guns",
+                DMCtx.GetChatPrefix(),
+                string.Join(
+                    "[white], ",
+                    (mode?.GetGuns() ?? [])
+                        .Select(g => $"[lime]!{g.Aliases[0]}")
+                        .Concat(mode?.HasPrimary == true ? ["[lime]!noprimary"] : [])
+                )
+            ]
         );
     }
 

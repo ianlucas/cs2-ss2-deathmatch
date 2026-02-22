@@ -16,19 +16,26 @@ public partial class Deathmatch
     public void HandleOnTick()
     {
         DMCtx.Think();
-        var current = DMCtx.GetCurrentMode()?.Name ?? "N/A";
+        var hudNa = Core.Localizer["dm.hud_na"];
+        var current = DMCtx.GetCurrentMode()?.Name ?? hudNa;
         var remaining = DMCtx.GetRemainingTime();
-        var next = DMCtx.GetNextMode()?.Name ?? "N/A";
+        var next = DMCtx.GetNextMode()?.Name ?? hudNa;
+        var hudSession = Core.Localizer["dm.hud_session"];
+        var hudPro = Core.Localizer["dm.hud_pro"];
+        var hudCurrent = Core.Localizer["dm.hud_current"];
+        var hudRemaining = Core.Localizer["dm.hud_remaining"];
+        var hudNext = Core.Localizer["dm.hud_next"];
+        var hudMessage = $"{hudCurrent} {current}\n{hudRemaining} {remaining}\n{hudNext} {next}";
         foreach (var player in Core.PlayerManager.GetAllValidPlayers())
         {
             if (!player.IsFakeClient && player.IsAlive)
             {
                 if (Core.Engine.GlobalVars.TickCount % 64 == 0)
                 {
-                    player.SendAlert($"Session - {player.GetKDR()} K/D\nPRO - 2.50 K/D");
+                    player.SendAlert($"{hudSession} - {player.GetKDR()} K/D\n{hudPro} - 2.50 K/D");
                     Core.NetMessage.Send<CCSUsrMsg_HintText>(msg =>
                     {
-                        msg.Message = $"Current: {current}\nRemaining: {remaining}\nNext: {next}";
+                        msg.Message = hudMessage;
                         msg.SendToPlayer(player.PlayerID);
                     });
                 }
@@ -43,15 +50,15 @@ public partial class Deathmatch
         player.SwitchGun(gun);
     }
 
-    public static void HandlePlayerPrintHelp(IPlayer player)
+    public void HandlePlayerPrintHelp(IPlayer player)
     {
-        player.SendChat($"{DMCtx.GetChatPrefix()} DM SERVER");
-        player.SendChat("Commands available to you:");
-        player.SendChat("![green]help -[white] prints help");
-        player.SendChat("![green]guns -[white] shows weapons commands");
+        player.SendChat(Core.Localizer["dm.help_header", DMCtx.GetChatPrefix()]);
+        player.SendChat(Core.Localizer["dm.help_commands"]);
+        player.SendChat(Core.Localizer["dm.help_commands_help"]);
+        player.SendChat(Core.Localizer["dm.help_commands_guns"]);
     }
 
-    public static void HandlePlayerSpawn(IPlayer player)
+    public void HandlePlayerSpawn(IPlayer player)
     {
         player.GiveLoadout();
         var session = player.GetSessionState();
@@ -98,13 +105,37 @@ public partial class Deathmatch
         // var record = attacker.Controller.DamageServices?.DamageList.FirstOrDefault(r =>
         //     r.PlayerControllerDamager.Value?.SteamID == victim.SteamID
         // );
-        // if (record == null)
-        //     return;
-        // var damage = record.NumHits > 0 ? $"[yellow]{(int)record.Damage}" : "[red]no";
-        // var hits = record.NumHits > 0 ? $" ([lime]{record.NumHits}[white])" : "";
+        // var damage = record != null ? $"[yellow]{(int)record.Damage}" : "[red]no";
+        // var hits = record != null ? $" ([lime]{record.NumHits}[white] hits)" : "";
         // victim.SendChat(
         //     $"You did {damage}[white]{hits} damage to [lime]{attacker.Controller.PlayerName}[white]."
         // );
+        var damageServices = attacker.Controller.DamageServices;
+        if (damageServices == null)
+            return;
+        var record = new DamageListIterator(damageServices.Address).FirstOrDefault(r =>
+            r.PlayerControllerDamager.Value?.SteamID == victim.SteamID
+        );
+        if (record != null)
+        {
+            victim.SendChat(
+                Core.Localizer[
+                    "dm.attacker_damage",
+                    DMCtx.GetChatPrefix(),
+                    (int)record.Damage,
+                    $" ([lime]{record.NumHits}[white] {(record.NumHits > 1 ? Core.Localizer["dm.attacker_damage_hits"] : Core.Localizer["dm.attacker_damage_hit"])})",
+                    attacker.Controller.PlayerName
+                ]
+            );
+            return;
+        }
+        victim.SendChat(
+            Core.Localizer[
+                "dm.attacker_damage_no",
+                DMCtx.GetChatPrefix(),
+                attacker.Controller.PlayerName
+            ]
+        );
     }
 
     public static bool HandlePlayerGunAcquire(IPlayer player, Gun gun, CCSWeaponBaseVData vData)

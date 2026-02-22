@@ -38,6 +38,8 @@ public class Mode(
         .OfType<Gun>()
         .FirstOrDefault(g => !g.IsSecondary);
 
+    public bool HasPrimary => _defaultPrimary != null;
+
     public Gun? GetDefaultSecondary() => _defaultSecondary;
 
     public Gun? GetDefaultPrimary() => _defaultPrimary;
