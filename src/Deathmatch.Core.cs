@@ -43,11 +43,11 @@ public partial class Deathmatch
             }
     }
 
-    public static void HandlePlayerGunRequest(IPlayer player, Gun gun)
+    public static void HandlePlayerWeaponRequest(IPlayer player, Weapon weapon)
     {
-        if (!player.IsAlive || DMCtx.GetCurrentMode()?.AllowsGun(gun) != true)
+        if (!player.IsAlive || DMCtx.GetCurrentMode()?.IsWeaponAllowed(weapon) != true)
             return;
-        player.SwitchGun(gun);
+        player.SwitchWeapon(weapon);
     }
 
     public void HandlePlayerPrintHelp(IPlayer player)
@@ -138,16 +138,20 @@ public partial class Deathmatch
         );
     }
 
-    public static bool HandlePlayerGunAcquire(IPlayer player, Gun gun, CCSWeaponBaseVData vData)
+    public static bool HandlePlayerWeaponAcquire(
+        IPlayer player,
+        Weapon weapon,
+        CCSWeaponBaseVData vData
+    )
     {
         if (
             vData.GearSlot != gear_slot_t.GEAR_SLOT_RIFLE
             && vData.GearSlot != gear_slot_t.GEAR_SLOT_PISTOL
         )
             return true;
-        if (DMCtx.GetCurrentMode()?.AllowsGun(gun) != true)
+        if (DMCtx.GetCurrentMode()?.IsWeaponAllowed(weapon) != true)
             return false;
-        player.GetState().GetLoadout().Set(gun);
+        player.GetState().GetLoadout().Set(weapon);
         return true;
     }
 

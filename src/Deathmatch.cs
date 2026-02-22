@@ -38,15 +38,15 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
         Core.GameEvent.HookPost<EventPlayerDisconnect>(OnPlayerDisconnect);
         Core.Command.HookClientCommand(OnClientCommand);
         Core.NetMessage.HookServerMessage<CMsgPlaceDecalEvent>(OnMsgPlaceDecal);
-        foreach (var gun in Guns.All)
-        foreach (var name in gun.Aliases)
+        foreach (var weapon in Weapons.All)
+        foreach (var name in weapon.Aliases)
             Core.Command.RegisterCommand(
                 name,
                 (context) =>
                 {
                     var player = context.Sender;
                     if (player != null)
-                        HandlePlayerGunRequest(player, gun);
+                        HandlePlayerWeaponRequest(player, weapon);
                 }
             );
     }

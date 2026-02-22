@@ -5,9 +5,9 @@
 
 namespace Deathmatch;
 
-public class BotGun(string gun, float probability)
+public class BotWeapon(string weapon, float probability)
 {
-    public string Gun { get; set; } = gun;
+    public string Weapon { get; set; } = weapon;
 
     public float Probability { get; set; } = probability;
 }

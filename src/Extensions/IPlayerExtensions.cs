@@ -56,27 +56,27 @@ public static class IPlayerExtensions
             }
         }
 
-        public void GiveGun(Gun gun)
+        public void GiveWeapon(Weapon weapon)
         {
             var originalTeam = self.Controller.Team;
-            if (gun.Team != Team.None && gun.Team != originalTeam)
-                self.Controller.Team = gun.Team;
-            self.PlayerPawn?.ItemServices?.GiveItem(gun.DesignerName);
+            if (weapon.Team != Team.None && weapon.Team != originalTeam)
+                self.Controller.Team = weapon.Team;
+            self.PlayerPawn?.ItemServices?.GiveItem(weapon.DesignerName);
             self.Controller.Team = originalTeam;
         }
 
-        public void SwitchGun(Gun gun)
+        public void SwitchWeapon(Weapon weapon)
         {
             var mode = DMCtx.GetCurrentMode();
             if (mode == null)
                 return;
             var loadout = self.GetState().GetLoadout();
-            if (loadout.GetPrimary() == gun)
+            if (loadout.GetPrimary() == weapon)
                 return;
-            self.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gun.GearSlot);
-            self.GiveGun(gun);
-            loadout.Set(gun);
-            self.PlayerPawn?.WeaponServices?.SelectWeaponBySlot(gun.GearSlot);
+            self.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(weapon.GearSlot);
+            self.GiveWeapon(weapon);
+            loadout.Set(weapon);
+            self.PlayerPawn?.WeaponServices?.SelectWeaponBySlot(weapon.GearSlot);
         }
 
         public void GiveLoadout()
@@ -90,8 +90,8 @@ public static class IPlayerExtensions
                 var loadout = mode.BotLoadout;
                 if (loadout == null)
                     return;
-                var secondary = PickBotGun(loadout.Secondary);
-                var primary = loadout.Primary != null ? PickBotGun(loadout.Primary) : null;
+                var secondary = PickBotWeapon(loadout.Secondary);
+                var primary = loadout.Primary != null ? PickBotWeapon(loadout.Primary) : null;
                 if (secondary != null)
                     pawn?.ItemServices?.GiveItem(secondary.DesignerName);
                 if (primary != null)
@@ -105,9 +105,9 @@ public static class IPlayerExtensions
                     ?? (loadout.HasNoPrimary() ? null : mode.GetDefaultPrimary());
                 var secondary = loadout.GetSecondary() ?? mode.GetDefaultSecondary();
                 if (secondary != null)
-                    self.GiveGun(secondary);
+                    self.GiveWeapon(secondary);
                 if (primary != null)
-                    self.GiveGun(primary);
+                    self.GiveWeapon(primary);
             }
         }
 
@@ -122,15 +122,15 @@ public static class IPlayerExtensions
         }
     }
 
-    private static Gun? PickBotGun(List<BotGun> botGuns)
+    private static Weapon? PickBotWeapon(List<BotWeapon> botWeapons)
     {
         var roll = Random.Shared.NextSingle();
         var cumulative = 0f;
-        foreach (var botGun in botGuns)
+        foreach (var botWeapon in botWeapons)
         {
-            cumulative += botGun.Probability;
+            cumulative += botWeapon.Probability;
             if (roll < cumulative)
-                return Guns.Find(botGun.Gun);
+                return Weapons.Find(botWeapon.Weapon);
         }
         return null;
     }

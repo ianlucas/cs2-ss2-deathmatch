@@ -15,7 +15,7 @@ public static class DMCtx
     public static readonly LinkedList<Mode> Modes = new([
         new(
             name: "Pistols",
-            gunNames:
+            weaponNames:
             [
                 "usp_silencer",
                 "deagle",
@@ -34,7 +34,7 @@ public static class DMCtx
         ),
         new(
             name: "Mid-Tier",
-            gunNames:
+            weaponNames:
             [
                 "deagle",
                 "mp9",
@@ -57,7 +57,7 @@ public static class DMCtx
         ),
         new(
             name: "Rifles",
-            gunNames:
+            weaponNames:
             [
                 "deagle",
                 "ak47",

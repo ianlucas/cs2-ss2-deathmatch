@@ -7,9 +7,9 @@ using SwiftlyS2.Shared.Players;
 
 namespace Deathmatch;
 
-public static class Guns
+public static class Weapons
 {
-    public static readonly IReadOnlyList<Gun> All =
+    public static readonly IReadOnlyList<Weapon> All =
     [
         // Pistols
         new("weapon_deagle", "Pistol", ["deagle", "deag", "desert_eagle"], 1),
@@ -52,18 +52,19 @@ public static class Guns
         new("weapon_g3sg1", "Rifle", ["g3", "g3sg1"], 11, Team.T),
     ];
 
-    private static readonly IReadOnlyDictionary<ushort, Gun> _byItemDef = All.ToDictionary(g =>
+    private static readonly IReadOnlyDictionary<ushort, Weapon> _byItemDef = All.ToDictionary(g =>
         g.ItemDef
     );
 
-    private static readonly IReadOnlyDictionary<string, Gun> _byDesignerName = All.ToDictionary(g =>
-        g.DesignerName
+    private static readonly IReadOnlyDictionary<string, Weapon> _byDesignerName = All.ToDictionary(
+        g => g.DesignerName
     );
 
-    public static Gun? GetByItemDef(ushort itemDef) => _byItemDef.GetValueOrDefault(itemDef);
+    public static Weapon? GetByItemDef(ushort itemDef) => _byItemDef.GetValueOrDefault(itemDef);
 
     public static string NormalizeName(string name) =>
         name.StartsWith("weapon_") ? name : $"weapon_{name}";
 
-    public static Gun? Find(string name) => _byDesignerName.GetValueOrDefault(NormalizeName(name));
+    public static Weapon? Find(string name) =>
+        _byDesignerName.GetValueOrDefault(NormalizeName(name));
 }

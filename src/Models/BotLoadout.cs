@@ -5,9 +5,9 @@
 
 namespace Deathmatch;
 
-public class BotLoadout(List<BotGun> secondary, List<BotGun>? primary = null)
+public class BotLoadout(List<BotWeapon> secondary, List<BotWeapon>? primary = null)
 {
-    public List<BotGun> Secondary { get; set; } = secondary;
+    public List<BotWeapon> Secondary { get; set; } = secondary;
 
-    public List<BotGun>? Primary { get; set; } = primary;
+    public List<BotWeapon>? Primary { get; set; } = primary;
 }

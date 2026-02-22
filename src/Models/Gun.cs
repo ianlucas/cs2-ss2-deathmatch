@@ -8,7 +8,7 @@ using SwiftlyS2.Shared.SchemaDefinitions;
 
 namespace Deathmatch;
 
-public class Gun(
+public class Weapon(
     string designerName,
     string type,
     List<string> aliases,

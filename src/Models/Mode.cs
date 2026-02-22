@@ -7,7 +7,7 @@ namespace Deathmatch;
 
 public class Mode(
     string name,
-    List<string> gunNames,
+    List<string> weaponNames,
     int duration,
     bool helmet = true,
     BotLoadout? botLoadout = null
@@ -15,7 +15,7 @@ public class Mode(
 {
     public string Name { get; set; } = name;
 
-    public List<string> GunNames { get; set; } = gunNames;
+    public List<string> WeaponNames { get; set; } = weaponNames;
 
     public int Duration { get; set; } = duration;
 
@@ -23,28 +23,28 @@ public class Mode(
 
     public BotLoadout? BotLoadout { get; set; } = botLoadout;
 
-    private readonly Dictionary<ushort, Gun> _guns = gunNames
-        .Select(Guns.Find)
-        .OfType<Gun>()
+    private readonly Dictionary<ushort, Weapon> _weapons = weaponNames
+        .Select(Weapons.Find)
+        .OfType<Weapon>()
         .ToDictionary(g => g.ItemDef);
 
-    private readonly Gun? _defaultSecondary = gunNames
-        .Select(Guns.Find)
-        .OfType<Gun>()
+    private readonly Weapon? _defaultSecondary = weaponNames
+        .Select(Weapons.Find)
+        .OfType<Weapon>()
         .FirstOrDefault(g => g.IsSecondary);
 
-    private readonly Gun? _defaultPrimary = gunNames
-        .Select(Guns.Find)
-        .OfType<Gun>()
+    private readonly Weapon? _defaultPrimary = weaponNames
+        .Select(Weapons.Find)
+        .OfType<Weapon>()
         .FirstOrDefault(g => !g.IsSecondary);
 
     public bool HasPrimary => _defaultPrimary != null;
 
-    public Gun? GetDefaultSecondary() => _defaultSecondary;
+    public Weapon? GetDefaultSecondary() => _defaultSecondary;
 
-    public Gun? GetDefaultPrimary() => _defaultPrimary;
+    public Weapon? GetDefaultPrimary() => _defaultPrimary;
 
-    public bool AllowsGun(Gun gun) => _guns.ContainsKey(gun.ItemDef);
+    public bool IsWeaponAllowed(Weapon weapon) => _weapons.ContainsKey(weapon.ItemDef);
 
-    public IEnumerable<Gun> GetGuns() => _guns.Values;
+    public IEnumerable<Weapon> GetWeapons() => _weapons.Values;
 }

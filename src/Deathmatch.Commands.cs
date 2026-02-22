@@ -20,7 +20,7 @@ public partial class Deathmatch
                 DMCtx.GetChatPrefix(),
                 string.Join(
                     "[white], ",
-                    (mode?.GetGuns() ?? [])
+                    (mode?.GetWeapons() ?? [])
                         .Select(g => $"[lime]!{g.Aliases[0]}")
                         .Concat(mode?.HasPrimary == true ? ["[lime]!noprimary"] : [])
                 )
@@ -35,7 +35,7 @@ public partial class Deathmatch
         if (player != null)
         {
             player.PlayerPawn?.WeaponServices?.RemoveWeaponBySlot(gear_slot_t.GEAR_SLOT_RIFLE);
-            player.GetState().GetLoadout().SetNoPrimary(true);
+            player.GetState().GetLoadout().SetNoprimary(true);
         }
     }
 
