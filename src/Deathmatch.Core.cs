@@ -20,25 +20,27 @@ public partial class Deathmatch
         var next = DMCtx.GetNextMode()?.Name ?? hudNa;
         var hudSession = Core.Localizer["dm.hud_session"];
         var hudPro = Core.Localizer["dm.hud_pro"];
+        var hudProRatio = ConVars.ProRatio.Value;
         var hudCurrent = Core.Localizer["dm.hud_current"];
         var hudRemaining = Core.Localizer["dm.hud_remaining"];
         var hudNext = Core.Localizer["dm.hud_next"];
         var hudMessage = $"{hudCurrent} {current}\n{hudRemaining} {remaining}\n{hudNext} {next}";
         foreach (var player in Core.PlayerManager.GetAllValidPlayers())
-        {
-            if (!player.IsFakeClient && player.IsAlive)
+            if (
+                !player.IsFakeClient
+                && player.IsAlive
+                && Core.Engine.GlobalVars.TickCount % 64 == 0
+            )
             {
-                if (Core.Engine.GlobalVars.TickCount % 64 == 0)
+                player.SendAlert(
+                    $"{hudSession} - {player.GetKDR()} K/D\n{hudPro} - {hudProRatio} K/D"
+                );
+                Core.NetMessage.Send<CCSUsrMsg_HintText>(msg =>
                 {
-                    player.SendAlert($"{hudSession} - {player.GetKDR()} K/D\n{hudPro} - 2.50 K/D");
-                    Core.NetMessage.Send<CCSUsrMsg_HintText>(msg =>
-                    {
-                        msg.Message = hudMessage;
-                        msg.SendToPlayer(player.PlayerID);
-                    });
-                }
+                    msg.Message = hudMessage;
+                    msg.SendToPlayer(player.PlayerID);
+                });
             }
-        }
     }
 
     public static void HandlePlayerGunRequest(IPlayer player, Gun gun)
@@ -89,10 +91,15 @@ public partial class Deathmatch
         var pawn = (player.IsFakeClient ? player.Pawn : player.PlayerPawn)?.As<CCSPlayerPawn>();
         if (pawn != null && pawn.IsValid && player.IsAlive)
         {
-            var amount = isHeadshot ? 25 : 10;
-            pawn.Health = Math.Min(Math.Max(pawn.Health + amount, 0), 100);
+            var amountHp = (
+                isHeadshot ? ConVars.ReplenishHealthHeadshot : ConVars.ReplenishHealth
+            ).Value;
+            pawn.Health = Math.Min(Math.Max(pawn.Health + amountHp, 0), 100);
             pawn.HealthUpdated();
-            pawn.ArmorValue = Math.Min(Math.Max(pawn.ArmorValue + amount, 0), 100);
+            var amountAp = (
+                isHeadshot ? ConVars.ReplenishArmorHeadshot : ConVars.ReplenishArmor
+            ).Value;
+            pawn.ArmorValue = Math.Min(Math.Max(pawn.ArmorValue + amountAp, 0), 100);
             pawn.ArmorValueUpdated();
         }
     }
@@ -102,11 +109,6 @@ public partial class Deathmatch
         // TODO This is crashing right now.
         // var record = attacker.Controller.DamageServices?.DamageList.FirstOrDefault(r =>
         //     r.PlayerControllerDamager.Value?.SteamID == victim.SteamID
-        // );
-        // var damage = record != null ? $"[yellow]{(int)record.Damage}" : "[red]no";
-        // var hits = record != null ? $" ([lime]{record.NumHits}[white] hits)" : "";
-        // victim.SendChat(
-        //     $"You did {damage}[white]{hits} damage to [lime]{attacker.Controller.PlayerName}[white]."
         // );
         var damageServices = attacker.Controller.DamageServices;
         if (damageServices == null)

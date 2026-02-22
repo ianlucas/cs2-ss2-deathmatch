@@ -15,6 +15,36 @@ public static class ConVars
         "[{red}Deathmatch{default}]"
     );
 
+    public static readonly IConVar<string> ProRatio = Swiftly.Core.ConVar.CreateOrFind(
+        "dm_pro_ratio",
+        "Target K/D ratio that pro players typically achieve in deathmatch.",
+        "2.50"
+    );
+
+    public static readonly IConVar<int> ReplenishHealth = Swiftly.Core.ConVar.CreateOrFind(
+        "dm_replenish_health",
+        "Amount of health replenished on kill.",
+        10
+    );
+
+    public static readonly IConVar<int> ReplenishHealthHeadshot = Swiftly.Core.ConVar.CreateOrFind(
+        "dm_replenish_health_headshot",
+        "Amount of health replenished on headshot kill.",
+        25
+    );
+
+    public static readonly IConVar<int> ReplenishArmor = Swiftly.Core.ConVar.CreateOrFind(
+        "dm_replenish_armor",
+        "Amount of armor replenished on kill.",
+        5
+    );
+
+    public static readonly IConVar<int> ReplenishArmorHeadshot = Swiftly.Core.ConVar.CreateOrFind(
+        "dm_replenish_armor_headshot",
+        "Amount of armor replenished on headshot kill.",
+        20
+    );
+
     public static IConVar<int> InfinityAmmo =>
         Swiftly.Core.ConVar.Find<int>("sv_infinite_ammo") ?? throw new InvalidOperationException(
             "Failed to find sv_infinite_ammo ConVar!"
@@ -28,5 +58,10 @@ public static class ConVars
     public static void Initialize()
     {
         _ = ChatPrefix;
+        _ = ProRatio;
+        _ = ReplenishHealth;
+        _ = ReplenishHealthHeadshot;
+        _ = ReplenishArmor;
+        _ = ReplenishArmorHeadshot;
     }
 }
