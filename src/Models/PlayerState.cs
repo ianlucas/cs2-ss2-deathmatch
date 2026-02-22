@@ -3,15 +3,16 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-using System.Text.Json.Serialization;
+using System.Collections.Concurrent;
 
 namespace Deathmatch;
 
-public class BotLoadout(List<BotWeapon> secondary, List<BotWeapon>? primary = null)
+public class PlayerState
 {
-    [JsonPropertyName("secondary")]
-    public List<BotWeapon> Secondary { get; set; } = secondary;
+    private readonly ConcurrentDictionary<string, PlayerLoadout> _loadout = new();
 
-    [JsonPropertyName("primary")]
-    public List<BotWeapon>? Primary { get; set; } = primary;
+    public PlayerLoadout GetLoadout()
+    {
+        return _loadout.GetOrAdd(DMCtx.GetCurrentMode()?.Name ?? "Default", _ => new());
+    }
 }

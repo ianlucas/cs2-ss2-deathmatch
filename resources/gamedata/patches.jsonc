@@ -1,0 +1,17 @@
+{
+  "RandomSpawnPatch": {
+    "signature": "RandomSpawnPatch",
+    "linux": "90 E9",
+    "windows": "90 90"
+  },
+  "DeathmatchScorePatch": {
+    "signature": "DeathmatchScorePatch",
+    "linux": "90 90 90 90 90",
+    "windows": "90 90 90 90 90"
+  },
+  "RespawnSoundPatch": {
+    "signature": "RespawnSoundPatch",
+    "linux": "90 90 90 90 90",
+    "windows": "90 90 90 90 90"
+  }
+}

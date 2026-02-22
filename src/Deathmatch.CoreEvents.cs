@@ -11,6 +11,16 @@ namespace Deathmatch;
 
 public partial class Deathmatch
 {
+    public void OnConVarValueChanged(IOnConVarValueChanged @event)
+    {
+        switch (@event.ConVarName)
+        {
+            case "dm_modes_file":
+                HandleModesFileChanged();
+                return;
+        }
+    }
+
     public void OnMapLoad(IOnMapLoadEvent @event)
     {
         PendingInternalPush = true;
@@ -30,20 +40,27 @@ public partial class Deathmatch
     public void OnConfigsExecuted()
     {
         Config.ExecDeathmatch();
+        ConVars.InfinityAmmo.Value = 2;
+    }
+
+    public HookResult OnClientCommand(int playerid, string commandLine)
+    {
+        var player = Core.PlayerManager.GetPlayer(playerid);
+        if (player != null && commandLine.StartsWith("buyrandom"))
+            return HookResult.Stop;
+        return HookResult.Continue;
     }
 
     public void OnCanAcquire(IOnItemServicesCanAcquireHookEvent @event)
     {
         var player = @event.ItemServices.GetPlayer();
         var vData = @event.WeaponVData;
-        if (player == null || vData == null)
+        if (player == null || player.IsFakeClient || vData == null)
             return;
         if (vData.GearSlot == gear_slot_t.GEAR_SLOT_KNIFE)
             return;
-        var gun = Game.Guns.FirstOrDefault(g =>
-            g.ItemDef == @event.EconItemView.ItemDefinitionIndex
-        );
-        if (gun == null || !HandlePlayerGunAcquire(player, gun))
+        var weapon = Weapons.GetByItemDef(@event.EconItemView.ItemDefinitionIndex);
+        if (weapon == null || !HandlePlayerWeaponAcquire(player, weapon, vData))
             @event.SetAcquireResult(AcquireResult.NotAllowedByMode);
     }
 }

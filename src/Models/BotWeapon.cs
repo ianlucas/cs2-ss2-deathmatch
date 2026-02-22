@@ -7,11 +7,11 @@ using System.Text.Json.Serialization;
 
 namespace Deathmatch;
 
-public class BotLoadout(List<BotWeapon> secondary, List<BotWeapon>? primary = null)
+public class BotWeapon(string weapon, float probability)
 {
-    [JsonPropertyName("secondary")]
-    public List<BotWeapon> Secondary { get; set; } = secondary;
+    [JsonPropertyName("weapon")]
+    public string Weapon { get; set; } = weapon;
 
-    [JsonPropertyName("primary")]
-    public List<BotWeapon>? Primary { get; set; } = primary;
+    [JsonPropertyName("probability")]
+    public float Probability { get; set; } = probability;
 }

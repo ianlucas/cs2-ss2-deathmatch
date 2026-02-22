@@ -8,18 +8,18 @@
 		[
 			{
 				key = "ShortTermAttackMemory"
-				time = 0.7
+				time = 0.15
 				distance = 0
 			},
 			{
 				key = "LongTermMemory"
-				time = 10
-				distance = 500
+				time = 30
+				distance = 2000
 			},
 			{
 				key = "ShortTermInvestigateMemory"
-				time = 3
-				distance = 200
+				time = 10
+				distance = 1000
 			}
 		]
 		child =

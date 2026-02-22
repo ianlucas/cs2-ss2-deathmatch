@@ -3,11 +3,16 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+using SwiftlyS2.Shared.Misc;
+using SwiftlyS2.Shared.ProtobufDefinitions;
+
 namespace Deathmatch;
 
-public class BotGun(string gun, float probability)
+public partial class Deathmatch
 {
-    public string Gun { get; set; } = gun;
-
-    public float Probability { get; set; } = probability;
+    public HookResult OnMsgPlaceDecal(CMsgPlaceDecalEvent msg)
+    {
+        msg.Recipients.RemoveAllPlayers();
+        return HookResult.Stop;
+    }
 }

@@ -5,10 +5,7 @@
 
 namespace Deathmatch;
 
-public static class PermissionHelpers
+public class PlayerSessionState
 {
-    public static List<string> Split(string value)
-    {
-        return [.. value.Split(",").Select(s => s.Trim())];
-    }
+    public bool IsInitialHelpSent = false;
 }
