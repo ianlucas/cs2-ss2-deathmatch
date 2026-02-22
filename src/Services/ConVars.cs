@@ -9,6 +9,12 @@ namespace Deathmatch;
 
 public static class ConVars
 {
+    public static readonly IConVar<string> ModesFile = Swiftly.Core.ConVar.CreateOrFind(
+        "dm_modes_file",
+        "Modes to be played in the deathmatch.",
+        "addons/swiftlys2/plugins/Deathmatch/resources/configs/default.json"
+    );
+
     public static readonly IConVar<string> ChatPrefix = Swiftly.Core.ConVar.CreateOrFind(
         "dm_chat_prefix",
         "Prefix displayed before chat messages.",

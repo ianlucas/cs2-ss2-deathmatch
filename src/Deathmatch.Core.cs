@@ -11,6 +11,13 @@ namespace Deathmatch;
 
 public partial class Deathmatch
 {
+    public void HandleModesFileChanged()
+    {
+        var modes = Modes.Load();
+        if (modes != null)
+            DMCtx.SetModes(modes);
+    }
+
     public void HandleOnTick()
     {
         DMCtx.Think();
@@ -25,6 +32,7 @@ public partial class Deathmatch
         var hudRemaining = Core.Localizer["dm.hud_remaining"];
         var hudNext = Core.Localizer["dm.hud_next"];
         var hudMessage = $"{hudCurrent} {current}\n{hudRemaining} {remaining}\n{hudNext} {next}";
+        var showHudMessage = DMCtx.GetModeCount() > 0;
         foreach (var player in Core.PlayerManager.GetAllValidPlayers())
             if (
                 !player.IsFakeClient
@@ -35,11 +43,12 @@ public partial class Deathmatch
                 player.SendAlert(
                     $"{hudSession} - {player.GetKDR()} K/D\n{hudPro} - {hudProRatio} K/D"
                 );
-                Core.NetMessage.Send<CCSUsrMsg_HintText>(msg =>
-                {
-                    msg.Message = hudMessage;
-                    msg.SendToPlayer(player.PlayerID);
-                });
+                if (showHudMessage)
+                    Core.NetMessage.Send<CCSUsrMsg_HintText>(msg =>
+                    {
+                        msg.Message = hudMessage;
+                        msg.SendToPlayer(player.PlayerID);
+                    });
             }
     }
 

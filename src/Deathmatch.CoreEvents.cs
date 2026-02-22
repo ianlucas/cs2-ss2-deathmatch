@@ -11,6 +11,16 @@ namespace Deathmatch;
 
 public partial class Deathmatch
 {
+    public void OnConVarValueChanged(IOnConVarValueChanged @event)
+    {
+        switch (@event.ConVarName)
+        {
+            case "dm_modes_file":
+                HandleModesFileChanged();
+                return;
+        }
+    }
+
     public void OnMapLoad(IOnMapLoadEvent @event)
     {
         PendingInternalPush = true;

@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+using Microsoft.Extensions.Logging;
 using SwiftlyS2.Shared.SchemaDefinitions;
 
 namespace Deathmatch;
@@ -12,80 +13,13 @@ public static class DMCtx
     private static int _modeStartedAt = 0;
     private static LinkedListNode<Mode>? _currentMode;
 
-    public static readonly LinkedList<Mode> Modes = new([
-        new(
-            name: "Pistols",
-            weaponNames:
-            [
-                "usp_silencer",
-                "deagle",
-                "elite",
-                "fiveseven",
-                "glock",
-                "tec9",
-                "hkp2000",
-                "p250",
-                "cz75a",
-                "revolver",
-            ],
-            helmet: false,
-            duration: 100,
-            botLoadout: new([new("usp_silencer", 0.8f), new("glock", 0.1f), new("deagle", 0.1f)])
-        ),
-        new(
-            name: "Mid-Tier",
-            weaponNames:
-            [
-                "deagle",
-                "mp9",
-                "usp_silencer",
-                "elite",
-                "fiveseven",
-                "glock",
-                "tec9",
-                "hkp2000",
-                "p250",
-                "cz75a",
-                "revolver",
-                "mac10",
-                "mp5sd",
-                "mp7",
-                "ump45",
-            ],
-            duration: 100,
-            botLoadout: new([new("deagle", 1)], [new("mp9", 0.3f), new("mac10", 0.1f)])
-        ),
-        new(
-            name: "Rifles",
-            weaponNames:
-            [
-                "deagle",
-                "ak47",
-                "usp_silencer",
-                "elite",
-                "fiveseven",
-                "glock",
-                "tec9",
-                "hkp2000",
-                "p250",
-                "cz75a",
-                "revolver",
-                "m4a1",
-                "m4a1_silencer",
-                "aug",
-                "sg556",
-                "famas",
-                "galilar",
-                "awp",
-                "ssg08",
-            ],
-            duration: 100,
-            botLoadout: new(
-                [new("deagle", 1)],
-                [new("ak47", 0.7f), new("m4a1", 0.1f), new("m4a1_silencer", 0.1f), new("awp", 0.1f)]
-            )
-        ),
-    ]);
+    private static LinkedList<Mode> _modes = new([]);
+
+    public static void SetModes(IEnumerable<Mode> modes)
+    {
+        _modes = new(modes);
+        _modeStartedAt = 0;
+    }
 
     public static string GetChatPrefix(bool stripColors = false)
     {
@@ -111,7 +45,12 @@ public static class DMCtx
 
     public static Mode? GetNextMode()
     {
-        return _currentMode?.Next?.Value ?? Modes.First?.Value;
+        return _currentMode?.Next?.Value ?? _modes.First?.Value;
+    }
+
+    public static int GetModeCount()
+    {
+        return _modes.Count;
     }
 
     public static void Think()
@@ -119,15 +58,15 @@ public static class DMCtx
         var tick = Swiftly.Core.Engine.GlobalVars.TickCount;
         if (_currentMode != null && ((tick - _modeStartedAt) / 64) <= _currentMode.Value.Duration)
             return;
-        _currentMode = _currentMode?.Next ?? Modes.First;
+        _currentMode = _currentMode?.Next ?? _modes.First;
         _modeStartedAt = tick;
         if (_currentMode == null)
             return;
         ConVars.FreeArmor.Value = _currentMode.Value.Helmet ? 2 : 1;
-        ResetAllPlayers();
+        ResetPlayers();
     }
 
-    private static void ResetAllPlayers()
+    private static void ResetPlayers()
     {
         var hasHelmet = GetCurrentMode()?.Helmet == true;
         foreach (

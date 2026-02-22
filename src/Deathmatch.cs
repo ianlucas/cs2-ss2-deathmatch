@@ -28,6 +28,7 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
         Core.GameData.ApplyPatch("RandomSpawnPatch");
         Core.GameData.ApplyPatch("DeathmatchScorePatch");
         Core.GameData.ApplyPatch("RespawnSoundPatch");
+        Core.Event.OnConVarValueChanged += OnConVarValueChanged;
         Core.Event.OnMapLoad += OnMapLoad;
         Core.Event.OnTick += OnTick;
         Core.Event.OnItemServicesCanAcquireHook += OnCanAcquire;
@@ -49,6 +50,7 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
                         HandlePlayerWeaponRequest(player, weapon);
                 }
             );
+        HandleModesFileChanged();
     }
 
     public override void Unload() { }
