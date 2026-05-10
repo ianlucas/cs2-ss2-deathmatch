@@ -46,7 +46,7 @@ public static class DMCtx
 
     public static bool HasMultipleModes()
     {
-        return _modes.Count > 0;
+        return _modes.Count > 1;
     }
 
     public static void Think()
