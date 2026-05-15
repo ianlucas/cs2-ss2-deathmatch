@@ -8,7 +8,7 @@ namespace Deathmatch;
 public static class Config
 {
     public static void ExecDeathmatch() =>
-        Swiftly.Core.Engine.ExecuteCommand([
+        Runtime.Core.Engine.ExecuteCommand([
             "sv_hibernate_when_empty 0",
             "bot_join_after_player 0",
             "mp_warmuptime 0",

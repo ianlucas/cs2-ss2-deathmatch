@@ -67,7 +67,7 @@ public static class IPlayerExtensions
 
         public void SwitchWeapon(Weapon weapon)
         {
-            var mode = DMCtx.GetCurrentMode();
+            var mode = Rules.GetCurrentMode();
             if (mode == null)
                 return;
             var loadout = self.GetState().GetLoadout();
@@ -81,7 +81,7 @@ public static class IPlayerExtensions
 
         public void GiveLoadout()
         {
-            var mode = DMCtx.GetCurrentMode();
+            var mode = Rules.GetCurrentMode();
             if (mode == null)
                 return;
             var pawn = (self.IsFakeClient ? self.PlayerPawn : self.Pawn)?.As<CCSPlayerPawn>();

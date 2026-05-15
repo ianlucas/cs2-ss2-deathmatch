@@ -13,6 +13,6 @@ public class PlayerState
 
     public PlayerLoadout GetLoadout()
     {
-        return _loadout.GetOrAdd(DMCtx.GetCurrentMode()?.Name ?? "Default", _ => new());
+        return _loadout.GetOrAdd(Rules.GetCurrentMode()?.Name ?? "Default", _ => new());
     }
 }

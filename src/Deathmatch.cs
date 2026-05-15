@@ -25,7 +25,7 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
 
     public override void Load(bool hotReload)
     {
-        Swiftly.Initialize();
+        Runtime.Initialize();
         ConVars.Initialize();
         Core.GameData.ApplyPatch("RandomSpawnPatch");
         Core.GameData.ApplyPatch("DeathmatchScorePatch");

@@ -19,8 +19,8 @@ public static class Modes
             var filename = ConVars.ModesFile.Value;
             var candidates = new[]
             {
-                Path.Combine(Swiftly.Core.GameDirectory, _configsDir, filename),
-                Path.Combine(Swiftly.Core.GameDirectory, "csgo", filename),
+                Path.Combine(Runtime.Core.GameDirectory, _configsDir, filename),
+                Path.Combine(Runtime.Core.GameDirectory, "csgo", filename),
             };
             var path =
                 candidates.FirstOrDefault(File.Exists)
@@ -32,7 +32,7 @@ public static class Modes
         }
         catch (Exception ex)
         {
-            Swiftly.Core.Logger.LogError(
+            Runtime.Core.Logger.LogError(
                 "Error when processing \"{File}\": {Error}",
                 ConVars.ModesFile.Value,
                 ex.Message

@@ -15,20 +15,20 @@ public partial class Deathmatch
     {
         var modes = Modes.Load();
         if (modes != null)
-            DMCtx.SetModes(modes);
+            Rules.SetModes(modes);
     }
 
     public void HandleOnTick()
     {
-        DMCtx.Think();
+        Rules.Think();
         if (Core.Engine.GlobalVars.TickCount % 64 != 0)
             return;
         var hudNa = Core.Localizer["dm.hud_na"];
-        var current = DMCtx.GetCurrentMode();
+        var current = Rules.GetCurrentMode();
         var name = current?.Name ?? hudNa;
-        var remaining = DMCtx.GetRemainingTime();
+        var remaining = Rules.GetRemainingTime();
         var remainingMmSs = TimeHelper.FormatMmSs(remaining);
-        var next = DMCtx.GetNextMode()?.Name ?? hudNa;
+        var next = Rules.GetNextMode()?.Name ?? hudNa;
         var hudSession = Core.Localizer["dm.hud_session"];
         var hudPro = Core.Localizer["dm.hud_pro"];
         var hudProRatio = ConVars.ProRatio.Value;
@@ -36,7 +36,7 @@ public partial class Deathmatch
         var hudRemaining = Core.Localizer["dm.hud_remaining"];
         var hudNext = Core.Localizer["dm.hud_next"];
         var hudMessage = $"{hudCurrent} {name}\n{hudRemaining} {remainingMmSs}\n{hudNext} {next}";
-        var showHudMessage = DMCtx.HasMultipleModes();
+        var showHudMessage = Rules.HasMultipleModes();
         if (remaining <= 3)
         {
             CountdownBeepSound.Recipients.AddAllPlayers();
@@ -60,14 +60,14 @@ public partial class Deathmatch
 
     public static void HandlePlayerWeaponRequest(IPlayer player, Weapon weapon)
     {
-        if (!player.IsAlive || DMCtx.GetCurrentMode()?.IsWeaponAllowed(weapon) != true)
+        if (!player.IsAlive || Rules.GetCurrentMode()?.IsWeaponAllowed(weapon) != true)
             return;
         player.SwitchWeapon(weapon);
     }
 
     public void HandlePlayerPrintHelp(IPlayer player)
     {
-        player.SendChat(Core.Localizer["dm.help_header", DMCtx.GetChatPrefix()]);
+        player.SendChat(Core.Localizer["dm.help_header", Rules.GetChatPrefix()]);
         player.SendChat(Core.Localizer["dm.help_commands"]);
         player.SendChat(Core.Localizer["dm.help_commands_help"]);
         player.SendChat(Core.Localizer["dm.help_commands_guns"]);
@@ -130,7 +130,7 @@ public partial class Deathmatch
             victim.SendChat(
                 Core.Localizer[
                     "dm.attacker_damage",
-                    DMCtx.GetChatPrefix(),
+                    Rules.GetChatPrefix(),
                     (int)record.Damage,
                     $" ([lime]{record.NumHits}[white] {(record.NumHits > 1 ? Core.Localizer["dm.attacker_damage_hits"] : Core.Localizer["dm.attacker_damage_hit"])})",
                     attacker.Controller.PlayerName
@@ -141,7 +141,7 @@ public partial class Deathmatch
         victim.SendChat(
             Core.Localizer[
                 "dm.attacker_damage_no",
-                DMCtx.GetChatPrefix(),
+                Rules.GetChatPrefix(),
                 attacker.Controller.PlayerName
             ]
         );
@@ -158,7 +158,7 @@ public partial class Deathmatch
             && vData.GearSlot != gear_slot_t.GEAR_SLOT_PISTOL
         )
             return true;
-        if (DMCtx.GetCurrentMode()?.IsWeaponAllowed(weapon) != true)
+        if (Rules.GetCurrentMode()?.IsWeaponAllowed(weapon) != true)
             return false;
         player.GetState().GetLoadout().Set(weapon);
         return true;

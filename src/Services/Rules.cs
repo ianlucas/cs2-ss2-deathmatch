@@ -7,16 +7,16 @@ using SwiftlyS2.Shared.SchemaDefinitions;
 
 namespace Deathmatch;
 
-public static class DMCtx
+public static class Rules
 {
-    private static int _modeStartedAt = 0;
-    private static LinkedListNode<Mode>? _currentMode;
-    private static LinkedList<Mode> _modes = new([]);
+    public static int ModeStartedAt { get; set; } = 0;
+    public static LinkedListNode<Mode>? CurrentMode { get; set; }
+    public static LinkedList<Mode> Modes { get; set; } = new([]);
 
     public static void SetModes(IEnumerable<Mode> modes)
     {
-        _modes = new(modes);
-        _modeStartedAt = 0;
+        Modes = new(modes);
+        ModeStartedAt = 0;
     }
 
     public static string GetChatPrefix(bool stripColors = false)
@@ -28,37 +28,37 @@ public static class DMCtx
 
     public static int GetRemainingTime()
     {
-        if (_currentMode == null)
+        if (CurrentMode == null)
             return 0;
-        var tick = Swiftly.Core.Engine.GlobalVars.TickCount;
-        return Math.Max(_currentMode.Value.Duration - ((tick - _modeStartedAt) / 64), 0);
+        var tick = Runtime.Core.Engine.GlobalVars.TickCount;
+        return Math.Max(CurrentMode.Value.Duration - ((tick - ModeStartedAt) / 64), 0);
     }
 
     public static Mode? GetCurrentMode()
     {
-        return _currentMode?.Value;
+        return CurrentMode?.Value;
     }
 
     public static Mode? GetNextMode()
     {
-        return _currentMode?.Next?.Value ?? _modes.First?.Value;
+        return CurrentMode?.Next?.Value ?? Modes.First?.Value;
     }
 
     public static bool HasMultipleModes()
     {
-        return _modes.Count > 1;
+        return Modes.Count > 1;
     }
 
     public static void Think()
     {
-        var tick = Swiftly.Core.Engine.GlobalVars.TickCount;
-        if (_currentMode != null && ((tick - _modeStartedAt) / 64) <= _currentMode.Value.Duration)
+        var tick = Runtime.Core.Engine.GlobalVars.TickCount;
+        if (CurrentMode != null && ((tick - ModeStartedAt) / 64) <= CurrentMode.Value.Duration)
             return;
-        _currentMode = _currentMode?.Next ?? _modes.First;
-        _modeStartedAt = tick;
-        if (_currentMode == null)
+        CurrentMode = CurrentMode?.Next ?? Modes.First;
+        ModeStartedAt = tick;
+        if (CurrentMode == null)
             return;
-        ConVars.FreeArmor.Value = _currentMode.Value.Helmet ? 2 : 1;
+        ConVars.FreeArmor.Value = CurrentMode.Value.Helmet ? 2 : 1;
         ResetPlayers();
     }
 
@@ -66,7 +66,7 @@ public static class DMCtx
     {
         var hasHelmet = GetCurrentMode()?.Helmet == true;
         foreach (
-            var player in Swiftly.Core.PlayerManager.GetAllValidPlayers().Where(p => p.IsAlive)
+            var player in Runtime.Core.PlayerManager.GetAllValidPlayers().Where(p => p.IsAlive)
         )
         {
             var pawn = (player.IsFakeClient ? player.Pawn : player.PlayerPawn)?.As<CCSPlayerPawn>();
