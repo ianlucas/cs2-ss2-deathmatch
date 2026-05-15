@@ -48,11 +48,17 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
                 (context) =>
                 {
                     var player = context.Sender;
-                    if (player != null)
-                        HandlePlayerWeaponRequest(player, weapon);
+                    player?.RequestWeapon(weapon);
                 }
             );
         HandleModesFileChanged();
+    }
+
+    public void HandleModesFileChanged()
+    {
+        var modes = Modes.Load();
+        if (modes != null)
+            Rules.SetModes(modes);
     }
 
     public override void Unload() { }

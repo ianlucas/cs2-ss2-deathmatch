@@ -36,6 +36,14 @@ public static class IPlayerExtensions
             _sessionStateMng.TryRemove(self.SteamID, out var _);
         }
 
+        public void PrintHelp()
+        {
+            self.SendChat(Runtime.Core.Localizer["dm.help_header", Rules.GetChatPrefix()]);
+            self.SendChat(Runtime.Core.Localizer["dm.help_commands"]);
+            self.SendChat(Runtime.Core.Localizer["dm.help_commands_help"]);
+            self.SendChat(Runtime.Core.Localizer["dm.help_commands_guns"]);
+        }
+
         public void SetHealth(int value)
         {
             var pawn = self.IsFakeClient ? self.Pawn : self.PlayerPawn;
@@ -54,6 +62,25 @@ public static class IPlayerExtensions
                 pawn.ArmorValue = value;
                 pawn.ArmorValueUpdated();
             }
+        }
+
+        public void OnSpawn()
+        {
+            self.GiveLoadout();
+            var session = self.GetSessionState();
+            if (!session.IsInitialHelpSent)
+            {
+                self.ResetStats();
+                self.PrintHelp();
+                session.IsInitialHelpSent = true;
+            }
+        }
+
+        public void RequestWeapon(Weapon weapon)
+        {
+            if (!self.IsAlive || Rules.GetCurrentMode()?.IsWeaponAllowed(weapon) != true)
+                return;
+            self.SwitchWeapon(weapon);
         }
 
         public void GiveWeapon(Weapon weapon)
@@ -111,6 +138,77 @@ public static class IPlayerExtensions
             }
         }
 
+        public void OnPickupItem()
+        {
+            var inGameMoneyServices = self.Controller.InGameMoneyServices;
+            if (inGameMoneyServices != null)
+            {
+                inGameMoneyServices.Account = 10000;
+                inGameMoneyServices.AccountUpdated();
+            }
+        }
+
+        public bool OnAcquireWeapon(Weapon weapon, CCSWeaponBaseVData vData)
+        {
+            if (
+                vData.GearSlot != gear_slot_t.GEAR_SLOT_RIFLE
+                && vData.GearSlot != gear_slot_t.GEAR_SLOT_PISTOL
+            )
+                return true;
+            if (Rules.GetCurrentMode()?.IsWeaponAllowed(weapon) != true)
+                return false;
+            self.GetState().GetLoadout().Set(weapon);
+            return true;
+        }
+
+        public void OnWeaponKill(CBasePlayerWeapon weapon, bool isHeadshot)
+        {
+            var vData = weapon.PlayerWeaponVData;
+            weapon.Clip1 = vData.DefaultClip1 + 1;
+            weapon.Clip1Updated();
+            var pawn = (self.IsFakeClient ? self.Pawn : self.PlayerPawn)?.As<CCSPlayerPawn>();
+            if (pawn != null && pawn.IsValid && self.IsAlive)
+            {
+                var amountHp = (
+                    isHeadshot ? ConVars.ReplenishHealthHeadshot : ConVars.ReplenishHealth
+                ).Value;
+                pawn.Health = Math.Min(Math.Max(pawn.Health + amountHp, 0), 100);
+                pawn.HealthUpdated();
+                var amountAp = (
+                    isHeadshot ? ConVars.ReplenishArmorHeadshot : ConVars.ReplenishArmor
+                ).Value;
+                pawn.ArmorValue = Math.Min(Math.Max(pawn.ArmorValue + amountAp, 0), 100);
+                pawn.ArmorValueUpdated();
+            }
+        }
+
+        public void OnKillPlayer(IPlayer victim)
+        {
+            var record = self.Controller.DamageServices?.DamageList.FirstOrDefault(r =>
+                r.PlayerControllerDamager.Value?.SteamID == victim.SteamID
+            );
+            if (record != null)
+            {
+                victim.SendChat(
+                    Runtime.Core.Localizer[
+                        "dm.attacker_damage",
+                        Rules.GetChatPrefix(),
+                        (int)record.Damage,
+                        $" ([lime]{record.NumHits}[white] {(record.NumHits > 1 ? Runtime.Core.Localizer["dm.attacker_damage_hits"] : Runtime.Core.Localizer["dm.attacker_damage_hit"])})",
+                        self.Controller.PlayerName
+                    ]
+                );
+                return;
+            }
+            victim.SendChat(
+                Runtime.Core.Localizer[
+                    "dm.attacker_damage_no",
+                    Rules.GetChatPrefix(),
+                    self.Controller.PlayerName
+                ]
+            );
+        }
+
         public string GetKDR()
         {
             var matchStats = self.Controller.ActionTrackingServices?.MatchStats;
@@ -130,6 +228,11 @@ public static class IPlayerExtensions
             matchStats.KillsUpdated();
             matchStats.Deaths = 0;
             matchStats.DeathsUpdated();
+        }
+
+        public void OnDisconnect()
+        {
+            self.RemoveSessionState();
         }
     }
 

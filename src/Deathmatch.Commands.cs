@@ -43,7 +43,6 @@ public partial class Deathmatch
     public void OnHelpCommand(ICommandContext context)
     {
         var player = context.Sender;
-        if (player != null)
-            HandlePlayerPrintHelp(player);
+        player?.PrintHelp();
     }
 }

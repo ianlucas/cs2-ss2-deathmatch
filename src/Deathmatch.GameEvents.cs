@@ -19,7 +19,7 @@ public partial class Deathmatch
     {
         var player = @event.UserIdPlayer;
         if (player != null)
-            HandlePlayerSpawn(player);
+            player.OnSpawn();
         return HookResult.Continue;
     }
 
@@ -27,7 +27,7 @@ public partial class Deathmatch
     {
         var player = @event.UserIdPlayer;
         if (player != null)
-            HandlePlayerItemPickup(player);
+            player.OnPickupItem();
         return HookResult.Continue;
     }
 
@@ -39,9 +39,9 @@ public partial class Deathmatch
         {
             var weapon = attacker.PlayerPawn?.WeaponServices?.ActiveWeapon.Value;
             if (weapon != null)
-                HandlePlayerWeaponKill(attacker, weapon, @event.Headshot);
+                attacker.OnWeaponKill(weapon, @event.Headshot);
             if (!victim.IsFakeClient && attacker != victim)
-                HandlePlayerDeath(attacker, victim);
+                attacker.OnKillPlayer(victim);
         }
         return HookResult.Continue;
     }
@@ -50,7 +50,7 @@ public partial class Deathmatch
     {
         var player = @event.UserIdPlayer;
         if (player != null)
-            HandlePlayerDisconnect(player);
+            player.OnDisconnect();
         return HookResult.Continue;
     }
 }
