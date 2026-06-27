@@ -45,8 +45,10 @@ public partial class Deathmatch
         var remainingMmSs = TimeHelper.FormatMmSs(remaining);
         var next = Rules.GetNextMode()?.Name ?? hudNa;
         var hudSession = Core.Localizer["dm.hud_session"];
-        var hudPro = Core.Localizer["dm.hud_pro"];
-        var hudProRatio = ConVars.ProRatio.Value;
+        var hudPro =
+            ConVars.ProRatio.Value != ""
+                ? $"\n{Core.Localizer["dm.hud_pro"]} - {ConVars.ProRatio.Value} K/D"
+                : "";
         var hudCurrent = Core.Localizer["dm.hud_current"];
         var hudRemaining = Core.Localizer["dm.hud_remaining"];
         var hudNext = Core.Localizer["dm.hud_next"];
@@ -61,9 +63,7 @@ public partial class Deathmatch
         foreach (var player in Core.PlayerManager.GetAllValidPlayers())
             if (!player.IsFakeClient)
             {
-                player.SendAlert(
-                    $"{hudSession} - {player.GetKDR()} K/D\n{hudPro} - {hudProRatio} K/D"
-                );
+                player.SendAlert($"{hudSession} - {player.GetKDR()} K/D{hudPro}");
                 if (showHudMessage)
                     Core.NetMessage.Send<CCSUsrMsg_HintText>(msg =>
                     {
