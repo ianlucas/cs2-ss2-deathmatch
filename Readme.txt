@@ -4,7 +4,7 @@ dm_chat_prefix "[{red}Deathmatch{default}]"
 dm_modes_file "addons/swiftlys2/plugins/Deathmatch/resources/configs/default.json"
     Path to the modes configuration file.
 
-dm_pro_ratio "2.50"
+dm_pro_ratio ""
     Target K/D ratio that pro players typically achieve in deathmatch.
 
 dm_replenish_health 10

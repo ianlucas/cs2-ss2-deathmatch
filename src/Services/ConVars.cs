@@ -25,7 +25,7 @@ public static class ConVars
     public static readonly IConVar<string> ProRatio = Runtime.Core.ConVar.CreateOrFind(
         "dm_pro_ratio",
         "Target K/D ratio that pro players typically achieve in deathmatch.",
-        "2.50"
+        ""
     );
 
     public static readonly IConVar<int> ReplenishHealth = Runtime.Core.ConVar.CreateOrFind(
