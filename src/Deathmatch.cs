@@ -33,7 +33,7 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
         Core.Event.OnConVarValueChanged += OnConVarValueChanged;
         Core.Event.OnMapLoad += OnMapLoad;
         Core.Event.OnTick += OnTick;
-        Core.Event.OnItemServicesCanAcquireHook += OnCanAcquire;
+        Core.GameHooks.Items.CanAcquire.Post += OnCanAcquire;
         Core.GameEvent.HookPre<EventPlayerTeam>(OnPlayerTeamPre);
         Core.GameEvent.HookPost<EventPlayerSpawn>(OnPlayerSpawn);
         Core.GameEvent.HookPost<EventItemPickup>(OnItemPickup);
