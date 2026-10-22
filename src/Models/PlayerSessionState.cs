@@ -8,4 +8,6 @@ namespace Deathmatch;
 public class PlayerSessionState
 {
     public bool IsInitialHelpSent = false;
+    public bool IsPlayingDeathmatch = false;
+    public long ImmunitySpawnMessageSentAt = 0;
 }

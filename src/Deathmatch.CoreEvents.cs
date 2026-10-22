@@ -18,12 +18,19 @@ public partial class Deathmatch
             case "dm_modes_file":
                 HandleModesFileChanged();
                 return;
+            case "dm_immunity":
+                OnIsImmunityEnabledChanged(ConVars.IsImmunityEnabled.Value);
+                return;
+            case "dm_immunity_alpha":
+                Immunity.UpdateAll();
+                return;
         }
     }
 
     public void OnMapLoad(IOnMapLoadEvent @event)
     {
         PendingInternalPush = true;
+        Immunity.Clear();
     }
 
     public void OnTick()
@@ -35,6 +42,7 @@ public partial class Deathmatch
         }
 
         Rules.Think();
+        Immunity.Think();
         if (Core.Engine.GlobalVars.TickCount % 64 != 0)
             return;
         var hudNa = Core.Localizer["dm.hud_na"];
@@ -60,7 +68,7 @@ public partial class Deathmatch
             CountdownBeepSound.Recipients.RemoveAllPlayers();
         }
         foreach (var player in Core.PlayerManager.GetAllValidPlayers())
-            if (!player.IsFakeClient)
+            if (!player.IsFakeClient && !player.IsImmune())
             {
                 player.SendAlert($"{hudSession} - {player.GetKDR()} K/D{hudPro}");
                 if (showHudMessage)

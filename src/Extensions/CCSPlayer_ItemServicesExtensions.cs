@@ -10,9 +10,12 @@ namespace Deathmatch;
 
 public static class CCSPlayer_ItemServicesExtensions
 {
-    public static IPlayer? GetPlayer(this CCSPlayer_ItemServices self)
+    extension(CCSPlayer_ItemServices self)
     {
-        var pawn = self.Pawn;
-        return pawn != null && pawn.IsValid ? pawn.ToPlayer() : null;
+        public IPlayer? GetPlayer()
+        {
+            var pawn = self.Pawn;
+            return pawn != null && pawn.IsValid ? pawn.ToPlayer() : null;
+        }
     }
 }

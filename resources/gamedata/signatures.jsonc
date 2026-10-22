@@ -13,5 +13,11 @@
     "lib": "server",
     "linux": "E8 ? ? ? ? E9 ? ? ? ? 0F 1F 00 48 8B BD ? ? ? ? 4C 8D 3D",
     "windows": "E8 ? ? ? ? F3 0F 10 87 ? ? ? ? 0F 2E C6 0F 28 B4 24 ? ? ? ? 7A ? 74 ? BA"
+  },
+  // Find the function referencing the "CCSBot::IsVisible( player )" string.
+  "CCSBot::IsVisible": {
+    "lib": "server",
+    "linux": "55 48 8D 05 ? ? ? ? 48 89 E5 41 57 4C 8D 7D B0 41 56 41 89 D6",
+    "windows": "48 89 5C 24 08 44 88 44 24 18 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D9"
   }
 }

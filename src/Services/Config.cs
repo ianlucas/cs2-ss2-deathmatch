@@ -103,7 +103,8 @@ public static class Config
             "mp_default_team_winner_no_objective -1",
             "mp_buy_allow_grenades 0",
             "mp_teammates_are_enemies 1",
-            "mp_solid_teammates 1",
+            "mp_solid_teammates 0",
+            "mp_solid_enemies 0",
             "sv_max_deathmatch_respawns_per_tick 1",
             "sv_disconnected_players_cleanup_delay 15",
             "r_decals_overide_fadestarttime_params 20",
@@ -117,5 +118,6 @@ public static class Config
             "sv_warmup_to_freezetime_delay 0",
             "sv_disable_radar 1",
             "sv_minimum_desired_chicken_count 0",
+            "sv_disable_immunity_alpha 1",
         ]);
 }

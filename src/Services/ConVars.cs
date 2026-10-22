@@ -13,7 +13,7 @@ public static class ConVars
     public static readonly IConVar<string> ChatPrefix = Runtime.Core.ConVar.CreateOrFind(
         "dm_chat_prefix",
         "Prefix displayed before chat messages.",
-        "[{red}Deathmatch{default}]"
+        "[{red}DM{default}]"
     );
 
     public static readonly IConVar<string> ModesFile = Runtime.Core.ConVar.CreateOrFind(
@@ -50,6 +50,20 @@ public static class ConVars
         "dm_replenish_armor_headshot",
         "Amount of armor replenished on headshot kill.",
         20
+    );
+
+    public static readonly IConVar<bool> IsImmunityEnabled = Runtime.Core.ConVar.CreateOrFind(
+        "dm_immunity",
+        "Players spawn immune and ignored by bots until they opt in using the !dm command.",
+        false
+    );
+
+    public static readonly IConVar<int> ImmunityAlpha = Runtime.Core.ConVar.CreateOrFind(
+        "dm_immunity_alpha",
+        "Opacity (0-255) of immune players as seen by other players.",
+        127,
+        0,
+        255
     );
 
     public static IConVar<int> InfinityAmmo =>

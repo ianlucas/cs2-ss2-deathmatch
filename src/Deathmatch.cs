@@ -52,7 +52,10 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
                 }
             );
         HandleModesFileChanged();
+        OnIsImmunityEnabledChanged(ConVars.IsImmunityEnabled.Value);
     }
+
+    private Guid? _botIsVisibleHookGuid;
 
     public void HandleModesFileChanged()
     {
@@ -61,5 +64,27 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
             Rules.SetModes(modes);
     }
 
-    public override void Unload() { }
+    public void OnIsImmunityEnabledChanged(bool value)
+    {
+        if (value == (_botIsVisibleHookGuid != null))
+            return;
+        if (value)
+        {
+            _botIsVisibleHookGuid = Natives.CCSBot_IsVisible.AddHook(OnBotIsVisible);
+            Core.GameHooks.Entities.TakeDamage.Pre += OnTakeDamagePre;
+            Immunity.UpdateAll();
+        }
+        else
+        {
+            Core.GameHooks.Entities.TakeDamage.Pre -= OnTakeDamagePre;
+            Natives.CCSBot_IsVisible.RemoveHook(_botIsVisibleHookGuid!.Value);
+            _botIsVisibleHookGuid = null;
+            Immunity.Reset();
+        }
+    }
+
+    public override void Unload()
+    {
+        OnIsImmunityEnabledChanged(false);
+    }
 }

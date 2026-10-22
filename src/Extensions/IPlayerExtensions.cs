@@ -11,6 +11,8 @@ namespace Deathmatch;
 
 public static class IPlayerExtensions
 {
+    private const long ImmunitySpawnMessageCooldownMs = 10_000;
+
     private static readonly ConcurrentDictionary<ulong, PlayerState> _stateMng = [];
     private static readonly ConcurrentDictionary<ulong, PlayerSessionState> _sessionStateMng = [];
 
@@ -42,6 +44,28 @@ public static class IPlayerExtensions
             self.SendChat(Runtime.Core.Localizer["dm.help_commands"]);
             self.SendChat(Runtime.Core.Localizer["dm.help_commands_help"]);
             self.SendChat(Runtime.Core.Localizer["dm.help_commands_guns"]);
+            if (ConVars.IsImmunityEnabled.Value)
+                self.SendChat(Runtime.Core.Localizer["dm.help_commands_dm"]);
+        }
+
+        public bool IsImmune()
+        {
+            return ConVars.IsImmunityEnabled.Value
+                && !self.IsFakeClient
+                && !self.GetSessionState().IsPlayingDeathmatch;
+        }
+
+        public void ToggleDeathmatch()
+        {
+            var session = self.GetSessionState();
+            session.IsPlayingDeathmatch = !session.IsPlayingDeathmatch;
+            Immunity.Update(self);
+            self.SendChat(
+                Runtime.Core.Localizer[
+                    session.IsPlayingDeathmatch ? "dm.immunity_off" : "dm.immunity_on",
+                    Rules.GetChatPrefix()
+                ]
+            );
         }
 
         public void SetHealth(int value)
@@ -73,6 +97,17 @@ public static class IPlayerExtensions
                 self.ResetStats();
                 self.PrintHelp();
                 session.IsInitialHelpSent = true;
+            }
+            Immunity.Update(self);
+            // Wall clock, since game time restarts on map change and spawns can come in bursts.
+            var now = Environment.TickCount64;
+            if (
+                self.IsImmune()
+                && now - session.ImmunitySpawnMessageSentAt >= ImmunitySpawnMessageCooldownMs
+            )
+            {
+                session.ImmunitySpawnMessageSentAt = now;
+                self.SendChat(Runtime.Core.Localizer["dm.immunity_spawn", Rules.GetChatPrefix()]);
             }
         }
 
@@ -232,6 +267,7 @@ public static class IPlayerExtensions
 
         public void OnDisconnect()
         {
+            Immunity.Remove(self);
             self.RemoveSessionState();
         }
     }
