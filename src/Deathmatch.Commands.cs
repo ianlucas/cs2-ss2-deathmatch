@@ -39,6 +39,14 @@ public partial class Deathmatch
         }
     }
 
+    [Command("dm")]
+    public void OnDmCommand(ICommandContext context)
+    {
+        var player = context.Sender;
+        if (player != null && ConVars.IsImmunityEnabled.Value)
+            player.ToggleDeathmatch();
+    }
+
     [Command("help")]
     public void OnHelpCommand(ICommandContext context)
     {

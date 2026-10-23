@@ -23,4 +23,14 @@ public partial class Deathmatch
         if (weapon == null || !player.OnAcquireWeapon(weapon, vData))
             context.Return = AcquireResult.NotAllowedByMode;
     }
+
+    public void OnTakeDamagePre(ref TakeDamageEntityPreContext context)
+    {
+        var victim = context.Params.Entity.GetPlayer();
+        if (victim == null)
+            return;
+        var attacker = context.Params.Info.Attacker.Value?.GetPlayer();
+        if (victim.IsImmune() || (attacker?.IsImmune() == true && !victim.IsFakeClient))
+            context.SetHookResult(HookResult.CancelOriginal);
+    }
 }
