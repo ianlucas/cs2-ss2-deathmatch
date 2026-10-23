@@ -1,23 +1,26 @@
 {
+  // In the function referencing "info_deathmatch_spawn" and "PutClientInServer: no info_player_start on level\n",
+  // the gamerules check jump that skips the mp_randomspawn check.
   "RandomSpawnPatch": {
     "lib": "server",
-    "linux": "E8 ? ? ? ? E9 ? ? ? ? 0F 1F 00 48 8B BD ? ? ? ? 4C 8D 3D",
-    "windows": "E8 ? ? ? ? F3 0F 10 87 ? ? ? ? 0F 2E C6 0F 28 B4 24 ? ? ? ? 7A ? 74 ? BA"
+    "linux": "0F 84 ? ? ? ? 48 8D 15 ? ? ? ? 48 8B 52 ? 8B 52",
+    "windows": "74 ? 48 8B 05 ? ? ? ? 8B 48 ? 0F B6 87"
   },
   "DeathmatchScorePatch": {
     "lib": "server",
     "linux": "E8 ? ? ? ? 58 5A 48 8D 65 ? 5B 41 5C 41 5D 41 5E 41 5F 5D C3 90 45 84 F6",
     "windows": "E8 ? ? ? ? 48 8B AC 24 ? ? ? ? 4C 8D 9C 24"
   },
+  // The team check jump right before the "Player.Respawn" sound is emitted.
   "RespawnSoundPatch": {
     "lib": "server",
-    "linux": "E8 ? ? ? ? E9 ? ? ? ? 0F 1F 00 48 8B BD ? ? ? ? 4C 8D 3D",
-    "windows": "E8 ? ? ? ? F3 0F 10 87 ? ? ? ? 0F 2E C6 0F 28 B4 24 ? ? ? ? 7A ? 74 ? BA"
+    "linux": "0F 86 ? ? ? ? 48 8D BD ? ? ? ? 45 31 C9",
+    "windows": "72 ? 4C 89 74 24 ? 4C 8D 05"
   },
   // Find the function referencing the "CCSBot::IsVisible( player )" string.
   "CCSBot::IsVisible": {
     "lib": "server",
-    "linux": "55 48 8D 05 ? ? ? ? 48 89 E5 41 57 4C 8D 7D B0 41 56 41 89 D6",
-    "windows": "48 89 5C 24 08 44 88 44 24 18 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D9"
+    "linux": "55 48 8D 05 ? ? ? ? 48 89 E5 41 57 4C 8D 7D ? 41 56 41 89 D6",
+    "windows": "48 89 5C 24 ? 44 88 44 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8D 05"
   }
 }
