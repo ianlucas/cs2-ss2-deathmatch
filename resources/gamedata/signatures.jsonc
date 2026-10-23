@@ -1,23 +1,36 @@
 {
-  // In the function referencing "info_deathmatch_spawn" and "PutClientInServer: no info_player_start on level\n",
-  // the gamerules check jump that skips the mp_randomspawn check.
+  // 1. Search for the "PutClientInServer: no info_player_start on level\n" string, its only xref is
+  //    EntSelectSpawnPoint.
+  // 2. After the "info_player_logo" branch, a gamerules function is called and its result tested.
+  //    When false, it jumps past the mp_randomspawn check (mp_randomspawn == team or 1) to the team
+  //    spawns.
+  // 3. The signature starts at that jump, where the patch is written.
   "RandomSpawnPatch": {
     "lib": "server",
     "linux": "0F 84 ? ? ? ? 48 8D 15 ? ? ? ? 48 8B 52 ? 8B 52",
     "windows": "74 ? 48 8B 05 ? ? ? ? 8B 48 ? 0F B6 87"
   },
+  // 1. Search for the "#Player_Point_Award_Killed_Enemy" string.
+  // 2. Pick the function (AddDeathmatchKillScore) that picks one of the "#Player_Point_Award_*"
+  //    tokens and ends by calling ClientPrint with HUD_PRINTTALK (3) and that token.
+  // 3. The signature starts at that ClientPrint call, where the patch is written.
   "DeathmatchScorePatch": {
     "lib": "server",
     "linux": "E8 ? ? ? ? 58 5A 48 8D 65 ? 5B 41 5C 41 5D 41 5E 41 5F 5D C3 90 45 84 F6",
     "windows": "E8 ? ? ? ? 48 8B AC 24 ? ? ? ? 4C 8D 9C 24"
   },
-  // The team check jump right before the "Player.Respawn" sound is emitted.
+  // 1. Search for the "Player.Respawn" string, its only xref is in the pawn's spawn function.
+  // 2. The sound is only emitted when a gamerules check passes and the team is at least
+  //    TEAM_TERRORIST (2).
+  // 3. The signature starts at that team check jump, where the patch is written.
   "RespawnSoundPatch": {
     "lib": "server",
     "linux": "0F 86 ? ? ? ? 48 8D BD ? ? ? ? 45 31 C9",
     "windows": "72 ? 4C 89 74 24 ? 4C 8D 05"
   },
-  // Find the function referencing the "CCSBot::IsVisible( player )" string.
+  // 1. Search for the "CCSBot::IsVisible( player )" string.
+  // 2. Its only xref is the profiling scope at the start of CCSBot::IsVisible, the signature starts
+  //    at the function's first instruction.
   "CCSBot::IsVisible": {
     "lib": "server",
     "linux": "55 48 8D 05 ? ? ? ? 48 89 E5 41 57 4C 8D 7D ? 41 56 41 89 D6",
