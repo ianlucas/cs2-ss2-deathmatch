@@ -7,7 +7,7 @@
   // 3. The signature starts at that jump, where the patch is written.
   "RandomSpawnPatch": {
     "lib": "server",
-    "linux": "0F 84 ? ? ? ? 48 8D 15 ? ? ? ? 48 8B 52 ? 8B 52",
+    "linux": "0F 84 ? ? ? ? 48 8D 15 ? ? ? ? 48 8B 52 ? 8B 52 ? 39 C2",
     "windows": "74 ? 48 8B 05 ? ? ? ? 8B 48 ? 0F B6 87"
   },
   // 1. Search for the "#Player_Point_Award_Killed_Enemy" string.
