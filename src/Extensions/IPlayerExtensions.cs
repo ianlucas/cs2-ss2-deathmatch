@@ -162,8 +162,7 @@ public static class IPlayerExtensions
             else
             {
                 var loadout = self.GetState().GetLoadout();
-                var primary =
-                    loadout.GetPrimary()
+                var primary = loadout.GetPrimary()
                     ?? (loadout.HasNoPrimary() ? null : mode.GetDefaultPrimary());
                 var secondary = loadout.GetSecondary() ?? mode.GetDefaultSecondary();
                 if (secondary != null)
