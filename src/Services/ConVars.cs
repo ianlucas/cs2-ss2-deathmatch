@@ -67,14 +67,12 @@ public static class ConVars
     );
 
     public static IConVar<int> InfinityAmmo =>
-        Runtime.Core.ConVar.Find<int>("sv_infinite_ammo") ?? throw new InvalidOperationException(
-            "Failed to find sv_infinite_ammo ConVar!"
-        );
+        Runtime.Core.ConVar.Find<int>("sv_infinite_ammo")
+        ?? throw new InvalidOperationException("Failed to find sv_infinite_ammo ConVar!");
 
     public static IConVar<int> FreeArmor =>
-        Runtime.Core.ConVar.Find<int>("mp_free_armor") ?? throw new InvalidOperationException(
-            "Failed to find mp_free_armor ConVar!"
-        );
+        Runtime.Core.ConVar.Find<int>("mp_free_armor")
+        ?? throw new InvalidOperationException("Failed to find mp_free_armor ConVar!");
 
     public static void Initialize() =>
         RuntimeHelpers.RunClassConstructor(typeof(ConVars).TypeHandle);

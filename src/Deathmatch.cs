@@ -43,14 +43,11 @@ public partial class Deathmatch(ISwiftlyCore core) : BasePlugin(core)
         Core.NetMessage.HookServerMessage<CMsgPlaceDecalEvent>(OnMsgPlaceDecal);
         foreach (var weapon in Weapons.All)
         foreach (var name in weapon.Aliases)
-            Core.Command.RegisterCommand(
-                name,
-                (context) =>
-                {
-                    var player = context.Sender;
-                    player?.RequestWeapon(weapon);
-                }
-            );
+            Core.Command.RegisterCommand(name, (context) =>
+            {
+                var player = context.Sender;
+                player?.RequestWeapon(weapon);
+            });
         HandleModesFileChanged();
         OnIsImmunityEnabledChanged(ConVars.IsImmunityEnabled.Value);
     }
